@@ -76,9 +76,17 @@
             height: 100%;
             background-color: #4b5563;
         }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
+            }
+            .chart-container {
+                height: 250px;
             }
         }
     </style>
@@ -144,7 +152,9 @@
                             <div class="w-2 h-2 rounded-full bg-gray-500"></div>
                         </div>
                     </div>
-                    <canvas id="plantChart" class="w-full h-64"></canvas>
+                    <div class="chart-container">
+                        <canvas id="plantChart"></canvas>
+                    </div>
                 </div>
                 <div class="card p-4">
                     <h3 class="text-sm text-gray-500 mb-4">Foto Pemantauan Tanaman</h3>
@@ -163,7 +173,9 @@
                 </div>
                 <div class="card p-4">
                     <h3 class="text-sm text-gray-500 mb-4">Salinitas</h3>
-                    <canvas id="salinityChart" class="w-full h-64"></canvas>
+                    <div class="chart-container">
+                        <canvas id="salinityChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,9 +186,28 @@
         fetch('mangrove_data.json')
             .then(response => response.json())
             .then(data => {
-                // Initialize plant chart
+                // Function to handle window resize for charts
+                function handleResize() {
+                    if (window.plantChart) {
+                        window.plantChart.resize();
+                    }
+                    if (window.salinityChart) {
+                        window.salinityChart.resize();
+                    }
+                }
+                
+                // Add resize event listener
+                window.addEventListener('resize', handleResize);
+                
+                // Initialize plant chart with fixed size
                 const plantCtx = document.getElementById('plantChart').getContext('2d');
-                const plantChart = new Chart(plantCtx, {
+                
+                // Destroy any existing chart instance
+                if (window.plantChart) {
+                    window.plantChart.destroy();
+                }
+                
+                window.plantChart = new Chart(plantCtx, {
                     type: 'line',
                     data: {
                         labels: data.plantGrowth.dates,
@@ -189,6 +220,8 @@
                         }]
                     },
                     options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -203,15 +236,19 @@
                             legend: {
                                 display: false
                             }
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false
+                        }
                     }
                 });
 
-                // Initialize salinity chart
+                // Initialize salinity chart with fixed size
                 const salinityCtx = document.getElementById('salinityChart').getContext('2d');
-                const salinityChart = new Chart(salinityCtx, {
+                
+                // Destroy any existing chart instance
+                if (window.salinityChart) {
+                    window.salinityChart.destroy();
+                }
+                
+                window.salinityChart = new Chart(salinityCtx, {
                     type: 'bar',
                     data: {
                         labels: data.salinity.dates,
@@ -222,6 +259,8 @@
                         }]
                     },
                     options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -232,9 +271,7 @@
                             legend: {
                                 display: false
                             }
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false
+                        }
                     }
                 });
 
