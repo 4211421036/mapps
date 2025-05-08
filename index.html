@@ -188,12 +188,8 @@
             .then(data => {
                 // Function to handle window resize for charts
                 function handleResize() {
-                    if (window.plantChart) {
-                        window.plantChart.resize();
-                    }
-                    if (window.salinityChart) {
-                        window.salinityChart.resize();
-                    }
+                    // Chart.js charts automatically resize with responsive option
+                    // No need to call resize() manually
                 }
                 
                 // Add resize event listener
@@ -202,12 +198,13 @@
                 // Initialize plant chart with fixed size
                 const plantCtx = document.getElementById('plantChart').getContext('2d');
                 
-                // Destroy any existing chart instance
-                if (window.plantChart) {
-                    window.plantChart.destroy();
+                // Check for existing chart instances using Chart.js's own registry
+                const existingChart = Chart.getChart(plantCtx.canvas);
+                if (existingChart) {
+                    existingChart.destroy();
                 }
                 
-                window.plantChart = new Chart(plantCtx, {
+                const plantChart = new Chart(plantCtx, {
                     type: 'line',
                     data: {
                         labels: data.plantGrowth.dates,
