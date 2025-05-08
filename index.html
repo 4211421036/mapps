@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemantauan Mangrove App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f9fafb;
+        }
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .info-title {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .action-button {
+            color: #4b5563;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        .action-button:hover {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+        }
+        .table-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .image-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .image-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-value {
+            height: 100%;
+            background-color: #4b5563;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Navigation -->
+        <nav class="navbar flex items-center justify-between p-4">
+            <div class="flex items-center">
+                <h1 class="text-lg font-semibold">Pemantauan Mangrove app</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="action-button">
+                    <i class="fas fa-share-alt"></i> share
+                </button>
+                <div class="w-8 h-8 rounded-full bg-gray-500"></div>
+            </div>
+        </nav>
+
+        <!-- Sub Navigation -->
+        <div class="bg-white border-b border-gray-200 px-4 py-2">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-sm font-medium text-gray-900">Home</a>
+                    <a href="#" class="text-sm font-medium text-gray-900">Pemantauan Mangrove dengan Satelit</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="pl-8 pr-4 py-1 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-2 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-4">
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="card p-4">
+                    <div class="mb-1 text-sm text-gray-500">Jenis Mangrove</div>
+                    <h2 class="text-xl font-bold mb-2">Sonneratia</h2>
+                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
+                </div>
+                <div class="card p-4">
+                    <div class="mb-1 text-sm text-gray-500">Daerah</div>
+                    <h2 class="text-xl font-bold mb-2">Pantai Mangunharjo</h2>
+                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
+                </div>
+                <div class="card p-4">
+                    <div class="mb-1 text-sm text-gray-500">Kondisi Mangrove</div>
+                    <h2 class="text-xl font-bold mb-2">Mangrove Sehat</h2>
+                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+                <div class="card p-4 col-span-1 lg:col-span-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-sm text-gray-500">Jumlah Tanaman</h3>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-gray-500"></div>
+                        </div>
+                    </div>
+                    <canvas id="plantChart" class="w-full h-64"></canvas>
+                </div>
+                <div class="card p-4">
+                    <h3 class="text-sm text-gray-500 mb-4">Foto Pemantauan Tanaman</h3>
+                    <div class="image-list" id="disease-images">
+                        <!-- Will be populated from JSON -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="card p-4">
+                    <h3 class="text-sm text-gray-500 mb-4">Tindakan yang dilakukan</h3>
+                    <div id="actions-list">
+                        <!-- Will be populated from JSON -->
+                    </div>
+                </div>
+                <div class="card p-4">
+                    <h3 class="text-sm text-gray-500 mb-4">Salinitas</h3>
+                    <canvas id="salinityChart" class="w-full h-64"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Fetch data from JSON file
+        fetch('mapps/mangrove_data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Initialize plant chart
+                const plantCtx = document.getElementById('plantChart').getContext('2d');
+                const plantChart = new Chart(plantCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.plantGrowth.dates,
+                        datasets: [{
+                            data: data.plantGrowth.values,
+                            borderColor: '#000',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+
+                // Initialize salinity chart
+                const salinityCtx = document.getElementById('salinityChart').getContext('2d');
+                const salinityChart = new Chart(salinityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.salinity.dates,
+                        datasets: [{
+                            data: data.salinity.values,
+                            backgroundColor: '#000',
+                            barThickness: 12,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+
+                // Populate disease images
+                const diseaseImagesContainer = document.getElementById('disease-images');
+                data.diseaseImages.forEach(image => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    
+                    const avatar = document.createElement('img');
+                    avatar.src = image.avatar;
+                    avatar.alt = 'Avatar';
+                    avatar.className = 'avatar';
+                    
+                    const textContainer = document.createElement('div');
+                    const title = document.createElement('div');
+                    title.className = 'text-sm font-medium';
+                    title.textContent = image.title;
+                    
+                    const action = document.createElement('div');
+                    action.className = 'text-xs text-blue-600';
+                    action.textContent = image.action;
+                    
+                    textContainer.appendChild(title);
+                    textContainer.appendChild(action);
+                    
+                    imageItem.appendChild(avatar);
+                    imageItem.appendChild(textContainer);
+                    
+                    diseaseImagesContainer.appendChild(imageItem);
+                });
+
+                // Populate actions list
+                const actionsContainer = document.getElementById('actions-list');
+                
+                // Add header
+                const header = document.createElement('div');
+                header.className = 'flex items-center justify-between mb-2 text-sm text-gray-500';
+                
+                const jenisHeader = document.createElement('div');
+                jenisHeader.textContent = 'Jenis Tindakan';
+                
+                const metricHeaders = document.createElement('div');
+                metricHeaders.className = 'flex items-center gap-8';
+                
+                const efektivitasHeader = document.createElement('div');
+                efektivitasHeader.textContent = 'Efektivitas';
+                
+                const dampakHeader = document.createElement('div');
+                dampakHeader.textContent = 'Dampak';
+                
+                metricHeaders.appendChild(efektivitasHeader);
+                metricHeaders.appendChild(dampakHeader);
+                
+                header.appendChild(jenisHeader);
+                header.appendChild(metricHeaders);
+                
+                actionsContainer.appendChild(header);
+                
+                // Add actions
+                data.actions.forEach(action => {
+                    const actionRow = document.createElement('div');
+                    actionRow.className = 'mb-4';
+                    
+                    const actionHeader = document.createElement('div');
+                    actionHeader.className = 'flex items-center justify-between mb-1';
+                    
+                    const actionNumber = document.createElement('div');
+                    actionNumber.className = 'flex items-center gap-2';
+                    
+                    const numberSpan = document.createElement('span');
+                    numberSpan.className = 'font-medium';
+                    numberSpan.textContent = action.id;
+                    
+                    const actionDesc = document.createElement('span');
+                    actionDesc.textContent = action.name;
+                    
+                    actionNumber.appendChild(numberSpan);
+                    actionNumber.appendChild(actionDesc);
+                    
+                    const actionValues = document.createElement('div');
+                    actionValues.className = 'flex items-center gap-4';
+                    
+                    const valueContainer = document.createElement('div');
+                    valueContainer.className = 'w-20 text-right font-medium';
+                    valueContainer.textContent = action.value;
+                    
+                    const percentContainer = document.createElement('div');
+                    percentContainer.className = 'w-12 text-right';
+                    percentContainer.textContent = action.percentage;
+                    
+                    actionValues.appendChild(valueContainer);
+                    actionValues.appendChild(percentContainer);
+                    
+                    actionHeader.appendChild(actionNumber);
+                    actionHeader.appendChild(actionValues);
+                    
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'progress-bar';
+                    
+                    const progressValue = document.createElement('div');
+                    progressValue.className = 'progress-value';
+                    progressValue.style.width = action.progressPercentage + '%';
+                    
+                    progressBar.appendChild(progressValue);
+                    
+                    const navigationRow = document.createElement('div');
+                    navigationRow.className = 'flex items-center justify-between mt-1';
+                    
+                    const prevButton = document.createElement('button');
+                    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                    prevButton.className = 'text-gray-500';
+                    
+                    const nextButton = document.createElement('button');
+                    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                    nextButton.className = 'text-gray-500';
+                    
+                    navigationRow.appendChild(prevButton);
+                    navigationRow.appendChild(nextButton);
+                    
+                    actionRow.appendChild(actionHeader);
+                    actionRow.appendChild(progressBar);
+                    actionRow.appendChild(navigationRow);
+                    
+                    actionsContainer.appendChild(actionRow);
+                });
+            })
+            .catch(error => console.error('Error loading data:', error));
+    </script>
+</body>
+</html>
