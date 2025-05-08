@@ -1,0 +1,93 @@
+{
+  "plantGrowth": {
+    "dates": ["23 Nov", "24", "25", "26", "27", "28", "29", "30"],
+    "values": [300, 600, 1000, 1500, 1800, 2500, 3200, 3000, 3500, 4000]
+  },
+  "salinity": {
+    "dates": ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+    "values": [38, 42, 36, 32, 37, 45, 52, 48, 55, 40, 35, 7]
+  },
+  "diseaseImages": [
+    {
+      "avatar": "/api/placeholder/40/40",
+      "title": "Penyebab Penyakit",
+      "action": "Tindakan"
+    },
+    {
+      "avatar": "/api/placeholder/40/40",
+      "title": "Penyebab Penyakit",
+      "action": "Tindakan"
+    },
+    {
+      "avatar": "/api/placeholder/40/40",
+      "title": "Penyebab Penyakit",
+      "action": "Tindakan"
+    },
+    {
+      "avatar": "/api/placeholder/40/40",
+      "title": "Penyebab Penyakit",
+      "action": "Tindakan"
+    },
+    {
+      "avatar": "/api/placeholder/40/40",
+      "title": "Penyebab Penyakit",
+      "action": "Tindakan"
+    }
+  ],
+  "actions": [
+    {
+      "id": "1",
+      "name": "Jenis Tindakan",
+      "value": "4321",
+      "percentage": "+84%",
+      "progressPercentage": 85
+    },
+    {
+      "id": "2",
+      "name": "Jenis Tindakan",
+      "value": "4033",
+      "percentage": "-8%",
+      "progressPercentage": 75
+    },
+    {
+      "id": "3",
+      "name": "Jenis Tindakan",
+      "value": "3128",
+      "percentage": "+2%",
+      "progressPercentage": 65
+    },
+    {
+      "id": "4",
+      "name": "Jenis Tindakan",
+      "value": "2104",
+      "percentage": "+33%",
+      "progressPercentage": 55
+    },
+    {
+      "id": "5",
+      "name": "Jenis Tindakan",
+      "value": "2003",
+      "percentage": "+20%",
+      "progressPercentage": 50
+    },
+    {
+      "id": "6",
+      "name": "Jenis Tindakan",
+      "value": "1894",
+      "percentage": "+15%",
+      "progressPercentage": 45
+    },
+    {
+      "id": "7",
+      "name": "Jenis Tindakan",
+      "value": "405",
+      "percentage": "-12%",
+      "progressPercentage": 35
+    }
+  ],
+  "mangroveInfo": {
+    "jenis": "Sonneratia",
+    "daerah": "Pantai Mangunharjo",
+    "kondisi": "Mangrove Sehat"
+  }
+}
