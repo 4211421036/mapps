@@ -124,7 +124,7 @@
 
         <!-- Main Content -->
         <div class="flex-1 p-4">
-            <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div class="card p-4">
                     <div class="mb-1 text-sm text-gray-500">Jenis Mangrove</div>
                     <h2 class="text-xl font-bold mb-2">Sonneratia</h2>
@@ -182,221 +182,283 @@
     </div>
     
     <script>
-        // Fetch data from JSON file
-        fetch('mangrove_data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Function to handle window resize for charts
-                function handleResize() {
-                    // Chart.js charts automatically resize with responsive option
-                    // No need to call resize() manually
+        // Global chart variables
+        let plantChart = null;
+        let salinityChart = null;
+
+        // Mock JSON data in case fetch fails
+        const mockData = {
+            plantGrowth: {
+                dates: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                values: [123, 145, 132, 167, 187, 210]
+            },
+            salinity: {
+                dates: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                values: [65, 59, 80, 75, 62, 70]
+            },
+            diseaseImages: [
+                { 
+                    avatar: '/api/placeholder/32/32', 
+                    title: 'Pemantauan 1', 
+                    action: 'Lihat Detail' 
+                },
+                { 
+                    avatar: '/api/placeholder/32/32', 
+                    title: 'Pemantauan 2', 
+                    action: 'Lihat Detail' 
+                },
+                { 
+                    avatar: '/api/placeholder/32/32', 
+                    title: 'Pemantauan 3', 
+                    action: 'Lihat Detail' 
                 }
-                
-                // Add resize event listener
-                window.addEventListener('resize', handleResize);
-                
-                // Initialize plant chart with fixed size
-                const plantCtx = document.getElementById('plantChart').getContext('2d');
-                
-                // Check for existing chart instances using Chart.js's own registry
-                const existingChart = Chart.getChart(plantCtx.canvas);
-                if (existingChart) {
-                    existingChart.destroy();
-                }
-                
-                const plantChart = new Chart(plantCtx, {
-                    type: 'line',
-                    data: {
-                        labels: data.plantGrowth.dates,
-                        datasets: [{
-                            data: data.plantGrowth.values,
-                            borderColor: '#000',
-                            borderWidth: 2,
-                            tension: 0.1,
-                            pointRadius: 0,
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return value;
-                                    }
+            ],
+            actions: [
+                { id: '01', name: 'Penanaman Bibit', value: '85%', percentage: '+12%', progressPercentage: 85 },
+                { id: '02', name: 'Pemeliharaan', value: '74%', percentage: '+7%', progressPercentage: 74 },
+                { id: '03', name: 'Monitoring', value: '90%', percentage: '+15%', progressPercentage: 90 }
+            ]
+        };
+
+        // Function to create or update charts
+        function setupCharts(data) {
+            // Plant Chart
+            const plantCtx = document.getElementById('plantChart').getContext('2d');
+            
+            // Check for existing chart using Chart.js's registry
+            if (plantChart) {
+                plantChart.destroy();
+            }
+            
+            plantChart = new Chart(plantCtx, {
+                type: 'line',
+                data: {
+                    labels: data.plantGrowth.dates,
+                    datasets: [{
+                        data: data.plantGrowth.values,
+                        borderColor: '#000',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value;
                                 }
                             }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
                         }
-                    }
-                });
-
-                // Initialize salinity chart with fixed size
-                const salinityCtx = document.getElementById('salinityChart').getContext('2d');
-                
-                // Destroy any existing chart instance
-                if (window.salinityChart) {
-                    window.salinityChart.destroy();
-                }
-                
-                window.salinityChart = new Chart(salinityCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.salinity.dates,
-                        datasets: [{
-                            data: data.salinity.values,
-                            backgroundColor: '#000',
-                            barThickness: 12,
-                        }]
                     },
-                    options: {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
-                });
+                }
+            });
 
-                // Populate disease images
-                const diseaseImagesContainer = document.getElementById('disease-images');
-                data.diseaseImages.forEach(image => {
-                    const imageItem = document.createElement('div');
-                    imageItem.className = 'image-item';
-                    
-                    const avatar = document.createElement('img');
-                    avatar.src = image.avatar;
-                    avatar.alt = 'Avatar';
-                    avatar.className = 'avatar';
-                    
-                    const textContainer = document.createElement('div');
-                    const title = document.createElement('div');
-                    title.className = 'text-sm font-medium';
-                    title.textContent = image.title;
-                    
-                    const action = document.createElement('div');
-                    action.className = 'text-xs text-blue-600';
-                    action.textContent = image.action;
-                    
-                    textContainer.appendChild(title);
-                    textContainer.appendChild(action);
-                    
-                    imageItem.appendChild(avatar);
-                    imageItem.appendChild(textContainer);
-                    
-                    diseaseImagesContainer.appendChild(imageItem);
-                });
+            // Salinity Chart
+            const salinityCtx = document.getElementById('salinityChart').getContext('2d');
+            
+            // Clean up existing chart
+            if (salinityChart) {
+                salinityChart.destroy();
+            }
+            
+            salinityChart = new Chart(salinityCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.salinity.dates,
+                    datasets: [{
+                        data: data.salinity.values,
+                        backgroundColor: '#000',
+                        barThickness: 12,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
 
-                // Populate actions list
-                const actionsContainer = document.getElementById('actions-list');
+        // Function to populate disease images
+        function populateDiseaseImages(data) {
+            const diseaseImagesContainer = document.getElementById('disease-images');
+            diseaseImagesContainer.innerHTML = ''; // Clear existing content
+            
+            data.diseaseImages.forEach(image => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
                 
-                // Add header
-                const header = document.createElement('div');
-                header.className = 'flex items-center justify-between mb-2 text-sm text-gray-500';
+                const avatar = document.createElement('img');
+                avatar.src = image.avatar;
+                avatar.alt = 'Avatar';
+                avatar.className = 'avatar';
                 
-                const jenisHeader = document.createElement('div');
-                jenisHeader.textContent = 'Jenis Tindakan';
+                const textContainer = document.createElement('div');
+                const title = document.createElement('div');
+                title.className = 'text-sm font-medium';
+                title.textContent = image.title;
                 
-                const metricHeaders = document.createElement('div');
-                metricHeaders.className = 'flex items-center gap-8';
+                const action = document.createElement('div');
+                action.className = 'text-xs text-blue-600';
+                action.textContent = image.action;
                 
-                const efektivitasHeader = document.createElement('div');
-                efektivitasHeader.textContent = 'Efektivitas';
+                textContainer.appendChild(title);
+                textContainer.appendChild(action);
                 
-                const dampakHeader = document.createElement('div');
-                dampakHeader.textContent = 'Dampak';
+                imageItem.appendChild(avatar);
+                imageItem.appendChild(textContainer);
                 
-                metricHeaders.appendChild(efektivitasHeader);
-                metricHeaders.appendChild(dampakHeader);
+                diseaseImagesContainer.appendChild(imageItem);
+            });
+        }
+
+        // Function to populate actions list
+        function populateActionsList(data) {
+            const actionsContainer = document.getElementById('actions-list');
+            actionsContainer.innerHTML = ''; // Clear existing content
+            
+            // Add header
+            const header = document.createElement('div');
+            header.className = 'flex items-center justify-between mb-2 text-sm text-gray-500';
+            
+            const jenisHeader = document.createElement('div');
+            jenisHeader.textContent = 'Jenis Tindakan';
+            
+            const metricHeaders = document.createElement('div');
+            metricHeaders.className = 'flex items-center gap-8';
+            
+            const efektivitasHeader = document.createElement('div');
+            efektivitasHeader.textContent = 'Efektivitas';
+            
+            const dampakHeader = document.createElement('div');
+            dampakHeader.textContent = 'Dampak';
+            
+            metricHeaders.appendChild(efektivitasHeader);
+            metricHeaders.appendChild(dampakHeader);
+            
+            header.appendChild(jenisHeader);
+            header.appendChild(metricHeaders);
+            
+            actionsContainer.appendChild(header);
+            
+            // Add actions
+            data.actions.forEach(action => {
+                const actionRow = document.createElement('div');
+                actionRow.className = 'mb-4';
                 
-                header.appendChild(jenisHeader);
-                header.appendChild(metricHeaders);
+                const actionHeader = document.createElement('div');
+                actionHeader.className = 'flex items-center justify-between mb-1';
                 
-                actionsContainer.appendChild(header);
+                const actionNumber = document.createElement('div');
+                actionNumber.className = 'flex items-center gap-2';
                 
-                // Add actions
-                data.actions.forEach(action => {
-                    const actionRow = document.createElement('div');
-                    actionRow.className = 'mb-4';
-                    
-                    const actionHeader = document.createElement('div');
-                    actionHeader.className = 'flex items-center justify-between mb-1';
-                    
-                    const actionNumber = document.createElement('div');
-                    actionNumber.className = 'flex items-center gap-2';
-                    
-                    const numberSpan = document.createElement('span');
-                    numberSpan.className = 'font-medium';
-                    numberSpan.textContent = action.id;
-                    
-                    const actionDesc = document.createElement('span');
-                    actionDesc.textContent = action.name;
-                    
-                    actionNumber.appendChild(numberSpan);
-                    actionNumber.appendChild(actionDesc);
-                    
-                    const actionValues = document.createElement('div');
-                    actionValues.className = 'flex items-center gap-4';
-                    
-                    const valueContainer = document.createElement('div');
-                    valueContainer.className = 'w-20 text-right font-medium';
-                    valueContainer.textContent = action.value;
-                    
-                    const percentContainer = document.createElement('div');
-                    percentContainer.className = 'w-12 text-right';
-                    percentContainer.textContent = action.percentage;
-                    
-                    actionValues.appendChild(valueContainer);
-                    actionValues.appendChild(percentContainer);
-                    
-                    actionHeader.appendChild(actionNumber);
-                    actionHeader.appendChild(actionValues);
-                    
-                    const progressBar = document.createElement('div');
-                    progressBar.className = 'progress-bar';
-                    
-                    const progressValue = document.createElement('div');
-                    progressValue.className = 'progress-value';
-                    progressValue.style.width = action.progressPercentage + '%';
-                    
-                    progressBar.appendChild(progressValue);
-                    
-                    const navigationRow = document.createElement('div');
-                    navigationRow.className = 'flex items-center justify-between mt-1';
-                    
-                    const prevButton = document.createElement('button');
-                    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-                    prevButton.className = 'text-gray-500';
-                    
-                    const nextButton = document.createElement('button');
-                    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                    nextButton.className = 'text-gray-500';
-                    
-                    navigationRow.appendChild(prevButton);
-                    navigationRow.appendChild(nextButton);
-                    
-                    actionRow.appendChild(actionHeader);
-                    actionRow.appendChild(progressBar);
-                    actionRow.appendChild(navigationRow);
-                    
-                    actionsContainer.appendChild(actionRow);
+                const numberSpan = document.createElement('span');
+                numberSpan.className = 'font-medium';
+                numberSpan.textContent = action.id;
+                
+                const actionDesc = document.createElement('span');
+                actionDesc.textContent = action.name;
+                
+                actionNumber.appendChild(numberSpan);
+                actionNumber.appendChild(actionDesc);
+                
+                const actionValues = document.createElement('div');
+                actionValues.className = 'flex items-center gap-4';
+                
+                const valueContainer = document.createElement('div');
+                valueContainer.className = 'w-20 text-right font-medium';
+                valueContainer.textContent = action.value;
+                
+                const percentContainer = document.createElement('div');
+                percentContainer.className = 'w-12 text-right';
+                percentContainer.textContent = action.percentage;
+                
+                actionValues.appendChild(valueContainer);
+                actionValues.appendChild(percentContainer);
+                
+                actionHeader.appendChild(actionNumber);
+                actionHeader.appendChild(actionValues);
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                
+                const progressValue = document.createElement('div');
+                progressValue.className = 'progress-value';
+                progressValue.style.width = action.progressPercentage + '%';
+                
+                progressBar.appendChild(progressValue);
+                
+                const navigationRow = document.createElement('div');
+                navigationRow.className = 'flex items-center justify-between mt-1';
+                
+                const prevButton = document.createElement('button');
+                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevButton.className = 'text-gray-500';
+                
+                const nextButton = document.createElement('button');
+                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextButton.className = 'text-gray-500';
+                
+                navigationRow.appendChild(prevButton);
+                navigationRow.appendChild(nextButton);
+                
+                actionRow.appendChild(actionHeader);
+                actionRow.appendChild(progressBar);
+                actionRow.appendChild(navigationRow);
+                
+                actionsContainer.appendChild(actionRow);
+            });
+        }
+
+        // Function to handle window resize for charts
+        function handleResize() {
+            // Charts will automatically resize with responsive option
+        }
+        
+        // Add resize event listener
+        window.addEventListener('resize', handleResize);
+        
+        // Load and initialize data
+        function loadData() {
+            fetch('mangrove_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Initialize all components with the fetched data
+                    setupCharts(data);
+                    populateDiseaseImages(data);
+                    populateActionsList(data);
+                })
+                .catch(error => {
+                    console.warn('Error loading data, using mock data instead:', error);
+                    // Use mock data if fetch fails
+                    setupCharts(mockData);
+                    populateDiseaseImages(mockData);
+                    populateActionsList(mockData);
                 });
-            })
-            .catch(error => console.error('Error loading data:', error));
+        }
+        
+        // Initialize the application
+        loadData();
     </script>
 </body>
 </html>
