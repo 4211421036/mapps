@@ -372,277 +372,226 @@
 </head>
 
 <body>
-    <div class="min-h-screen flex flex-col">
-        <!-- Navigation -->
-        <nav class="navbar flex items-center justify-between p-4">
-            <div class="flex items-center space-x-2">
-                <div class="text-green-600 text-2xl">
-                    <i class="fas fa-seedling"></i>
+    <div class="min-h-screen flex flex-col" lang="id" role="document">
+    <!-- Navigation -->
+        <header role="banner">
+            <nav class="navbar flex items-center justify-between p-4" role="navigation" aria-label="Navigasi utama">
+                <div class="flex items-center space-x-2">
+                    <div class="text-green-600 text-2xl" aria-hidden="true">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h1 class="text-lg font-bold text-gray-800" id="site-title">Pemantauan Mangrove</h1>
                 </div>
-                <h1 class="text-lg font-bold text-gray-800">Pemantauan Mangrove</h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <button type="button" class="action-button" title="Notifications">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <button type="button" class="action-button" title="Share">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-                <div
-                    class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
-                    <i class="fas fa-user"></i>
+                <div class="flex items-center gap-4" role="group" aria-label="Aksi pengguna">
+                    <button type="button" class="action-button" title="Notifikasi" aria-label="Notifikasi">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="action-button" title="Bagikan" aria-label="Bagikan">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                    </button>
+                    <div
+                        class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold"
+                        role="img" aria-label="Profil pengguna">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </header>
 
         <!-- Sub Navigation -->
-        <div class="bg-white border-b border-gray-200 px-4 py-3">
+        <div class="bg-white border-b border-gray-200 px-4 py-3" role="navigation" aria-label="Navigasi sekunder">
             <div class="flex items-center justify-between mobile">
-                <div class="flex items-center gap-6">
-                    <a href="#" class="text-sm font-medium text-gray-900 flex items-center">
-                        <i class="fas fa-home mr-2"></i> Home
+                <div class="flex items-center gap-6" role="group" aria-label="Tautan halaman">
+                    <a href="#" class="text-sm font-medium text-gray-900 flex items-center" aria-current="page">
+                        <i class="fas fa-home mr-2" aria-hidden="true"></i> Home
                     </a>
-                    <a href="https://ee-izzmhmd53.projects.earthengine.app/view/mangrove-ecosystem-monitoring-platforms" class="text-sm font-medium text-green-600 flex items-center">
-                        <i class="fas fa-chart-line mr-2"></i> Pemantauan Mangrove
+                    <a href="https://ee-izzmhmd53.projects.earthengine.app/view/mangrove-ecosystem-monitoring-platforms" class="text-sm font-medium text-green-600 flex items-center" target="_blank" rel="noopener" title="Buka di tab baru">
+                        <i class="fas fa-chart-line mr-2" aria-hidden="true"></i> Pemantauan Mangrove
                     </a>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2" role="search">
                     <div class="relative">
-                        <input type="text" placeholder="Cari data..."
-                            class="pl-8 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <label for="search-input" class="sr-only">Cari data</label>
+                        <input id="search-input" type="text" placeholder="Cari data..."
+                            class="pl-8 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            aria-label="Pencarian data">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400" aria-hidden="true"></i>
                     </div>
-                    <button type="button" class="primary-button">
-                        <i class="fas fa-filter mr-1"></i> Filter
+                    <button type="button" class="primary-button" aria-label="Terapkan filter">
+                        <i class="fas fa-filter mr-1" aria-hidden="true"></i> Filter
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-4">
-            <!-- Mangrove Info Cards -->
-            <div id="info-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <!-- Will be populated from JSON -->
+        <main class="p-6" role="main">
+          <div class="flex items-center space-x-4" aria-label="Komposisi Jenis Mangrove">
+            <div class="flex-1 space-y-4">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm font-medium">Sonneratia</span>
+                  <span class="text-sm font-medium" aria-label="Sonneratia 45 persen">45%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Sonneratia">
+                  <div class="progress-value progress-positive" style="width: 45%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm font-medium">Rhizophora</span>
+                  <span class="text-sm font-medium" aria-label="Rhizophora 30 persen">30%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Rhizophora">
+                  <div class="progress-value progress-positive" style="width: 30%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm font-medium">Avicennia</span>
+                  <span class="text-sm font-medium" aria-label="Avicennia 15 persen">15%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Avicennia">
+                  <div class="progress-value progress-positive" style="width: 15%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm font-medium">Lainnya</span>
+                  <span class="text-sm font-medium" aria-label="Lainnya 10 persen">10%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Lainnya">
+                  <div class="progress-value progress-positive" style="width: 10%"></div>
+                </div>
+              </div>
             </div>
-
-            <!-- Main Dashboard Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="card p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold">Ringkasan Pertumbuhan</h3>
-                        <div class="relative">
-                            <label for="growth-period" class="sr-only">Pilih Periode Pertumbuhan</label>
-                            <select id="growth-period"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-2">
-                                <option value="weekly">Mingguan</option>
-                                <option value="monthly">Bulanan</option>
-                                <option value="yearly">Tahunan</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 mb-4">
-                        <div class="dashboard-stat">
-                            <div class="stat-value text-green-600" id="stat-total-plants">0</div>
-                            <div class="stat-label">Total Tanaman</div>
-                        </div>
-                        <div class="dashboard-stat">
-                            <div class="stat-value text-blue-600" id="stat-growth-rate">0%</div>
-                            <div class="stat-label">Laju Pertumbuhan</div>
-                        </div>
-                        <div class="dashboard-stat">
-                            <div class="stat-value text-amber-600" id="stat-health-index">0%</div>
-                            <div class="stat-label">Indeks Kesehatan</div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500">Terakhir diperbarui: <span
-                                id="last-updated">--/--/----</span></span>
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat
-                            Detail</button>
-                    </div>
-                </div>
-
-                <div class="card p-5 col-span-2">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-semibold">Distribusi Jenis Mangrove</h3>
-                            <p class="text-sm text-gray-500">Persentase populasi berdasarkan jenis</p>
-                        </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="More options">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-1 space-y-4">
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm font-medium">Sonneratia</span>
-                                    <span class="text-sm font-medium">45%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-value progress-positive" style="width: 45%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm font-medium">Rhizophora</span>
-                                    <span class="text-sm font-medium">30%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-value progress-positive" style="width: 30%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm font-medium">Avicennia</span>
-                                    <span class="text-sm font-medium">15%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-value progress-positive" style="width: 15%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm font-medium">Lainnya</span>
-                                    <span class="text-sm font-medium">10%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-value progress-positive" style="width: 10%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="hidden md:block w-40 h-40 relative">
-                            <div class="rounded-full w-40 h-40 bg-gray-100 flex items-center justify-center">
-                                <div class="text-lg font-bold text-gray-700">4 Jenis</div>
-                            </div>
-                            <div class="absolute top-0 left-0 w-40 h-40">
-                                <svg viewBox="0 0 100 100">
-                                    <!-- Pie chart segments - would be dynamic in real usage -->
-                                    <path d="M 50,50 L 50,0 A 50,50 0 0,1 97.55,34.55 z" fill="#059669" />
-                                    <path d="M 50,50 L 97.55,34.55 A 50,50 0 0,1 65.45,97.55 z" fill="#0369a1" />
-                                    <path d="M 50,50 L 65.45,97.55 A 50,50 0 0,1 0,50 z" fill="#8b5cf6" />
-                                    <path d="M 50,50 L 0,50 A 50,50 0 0,1 50,0 z" fill="#f59e0b" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        
+            <div class="hidden md:block w-40 h-40 relative" aria-hidden="true">
+              <div class="rounded-full w-40 h-40 bg-gray-100 flex items-center justify-center">
+                <div class="text-lg font-bold text-gray-700">4 Jenis</div>
+              </div>
+              <div class="absolute top-0 left-0 w-40 h-40">
+                <svg viewBox="0 0 100 100" role="img" aria-label="Diagram Pie Jenis Mangrove">
+                  <path d="M 50,50 L 50,0 A 50,50 0 0,1 97.55,34.55 z" fill="#059669" />
+                  <path d="M 50,50 L 97.55,34.55 A 50,50 0 0,1 65.45,97.55 z" fill="#0369a1" />
+                  <path d="M 50,50 L 65.45,97.55 A 50,50 0 0,1 0,50 z" fill="#8b5cf6" />
+                  <path d="M 50,50 L 0,50 A 50,50 0 0,1 50,0 z" fill="#f59e0b" />
+                </svg>
+              </div>
             </div>
-
-            <!-- Growth Charts and Images -->
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-                <div class="card p-5 col-span-1 lg:col-span-3">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-semibold">Jumlah Pertumbuhan Tanaman</h3>
-                            <p class="text-sm text-gray-500">Perkembangan populasi mangrove dari waktu ke waktu</p>
-                        </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Download Data">
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="plantChart"></canvas>
-                    </div>
-                    <div class="chart-legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: #059669;"></div>
-                            <span class="text-sm">Pertumbuhan</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: rgba(5, 150, 105, 0.2);"></div>
-                            <span class="text-sm">Proyeksi</span>
-                        </div>
-                    </div>
+          </div>
+        
+          <!-- Section Jumlah Pertumbuhan -->
+          <section aria-labelledby="section-growth" class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+            <div class="card p-5 col-span-1 lg:col-span-3">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 id="section-growth" class="font-semibold">Jumlah Pertumbuhan Tanaman</h3>
+                  <p class="text-sm text-gray-500">Perkembangan populasi mangrove dari waktu ke waktu</p>
                 </div>
-                <div class="card p-5">
-                    <h3 class="font-semibold mb-4">Foto Pemantauan</h3>
-                    <div class="image-list" id="monitoring-images">
-                        <!-- Will be populated from JSON -->
-                    </div>
-                    <div class="mt-4 text-center">
-                        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Semua</button>
-                    </div>
+                <button type="button" class="text-gray-500 hover:text-gray-700" title="Download Data" aria-label="Download data pertumbuhan tanaman">
+                  <i class="fas fa-download" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="chart-container" role="img" aria-label="Grafik pertumbuhan tanaman mangrove">
+                <canvas id="plantChart"></canvas>
+              </div>
+              <div class="chart-legend" aria-hidden="true">
+                <div class="legend-item">
+                  <div class="legend-color" style="background-color: #059669;"></div>
+                  <span class="text-sm">Pertumbuhan</span>
                 </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background-color: rgba(5, 150, 105, 0.2);"></div>
+                  <span class="text-sm">Proyeksi</span>
+                </div>
+              </div>
             </div>
-
-            <!-- Actions and Salinity -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="card p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-semibold">Tindakan yang Dilakukan</h3>
-                            <p class="text-sm text-gray-500">Efektivitas tindakan konservasi mangrove</p>
-                        </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Filter Options">
-                            <i class="fas fa-filter"></i>
-                        </button>
-                    </div>
-                    <div id="actions-list" class="space-y-4">
-                        <!-- Will be populated from JSON -->
-                    </div>
-                    <div class="mt-4 text-center">
-                        <button class="primary-button">
-                            <i class="fas fa-plus mr-1"></i> Tambah Tindakan
-                        </button>
-                    </div>
-                </div>
-                <div class="card p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-semibold">Monitoring Salinitas</h3>
-                            <p class="text-sm text-gray-500">Tingkat salinitas rata-rata bulanan (ppt)</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-500">
-                                <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span> Normal: 30-50
-                                ppt
-                            </span>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="salinityChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Detail
-                            Monitoring</button>
-                    </div>
-                </div>
+        
+            <!-- Foto Pemantauan -->
+            <div class="card p-5" aria-labelledby="section-monitoring-photo">
+              <h3 id="section-monitoring-photo" class="font-semibold mb-4">Foto Pemantauan</h3>
+              <div class="image-list" id="monitoring-images" role="list" aria-label="Daftar Foto Pemantauan">
+                <!-- Akan diisi dari JSON -->
+              </div>
+              <div class="mt-4 text-center">
+                <button class="text-sm text-blue-600 hover:text-blue-800 font-medium" aria-label="Lihat semua foto">Lihat Semua</button>
+              </div>
             </div>
-        </div>
-    </div>
-    <!-- Modal Structure -->
-    <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-t-lg shadow-xl transform transition-all relative">
-            <!-- Swipe Indicator -->
-            <div class="swipe-indicator-container py-2 flex justify-center">
+          </section>
+        
+          <!-- Tindakan dan Salinitas -->
+          <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Tindakan -->
+            <div class="card p-5" aria-labelledby="section-actions">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 id="section-actions" class="font-semibold">Tindakan yang Dilakukan</h3>
+                  <p class="text-sm text-gray-500">Efektivitas tindakan konservasi mangrove</p>
+                </div>
+                <button type="button" class="text-gray-500 hover:text-gray-700" title="Filter Options" aria-label="Filter tindakan konservasi">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div id="actions-list" class="space-y-4" role="list" aria-label="Daftar tindakan konservasi">
+                <!-- Diisi lewat JSON -->
+              </div>
+              <div class="mt-4 text-center">
+                <button class="primary-button" aria-label="Tambah tindakan baru">
+                  <i class="fas fa-plus mr-1" aria-hidden="true"></i> Tambah Tindakan
+                </button>
+              </div>
+            </div>
+        
+            <!-- Monitoring Salinitas -->
+            <div class="card p-5" aria-labelledby="section-salinity">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 id="section-salinity" class="font-semibold">Monitoring Salinitas</h3>
+                  <p class="text-sm text-gray-500">Tingkat salinitas rata-rata bulanan (ppt)</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm text-gray-500">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1" aria-hidden="true"></span> Normal: 30–50 ppt
+                  </span>
+                </div>
+              </div>
+              <div class="chart-container" role="img" aria-label="Grafik monitoring salinitas">
+                <canvas id="salinityChart"></canvas>
+              </div>
+              <div class="mt-4 text-center">
+                <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium" aria-label="Lihat detail monitoring salinitas">Lihat Detail Monitoring</button>
+              </div>
+            </div>
+          </section>
+        
+          <!-- Modal -->
+          <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 transition-opacity" tabindex="-1" aria-hidden="true"></div>
+            <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-t-lg shadow-xl transform transition-all relative">
+              <div class="swipe-indicator-container py-2 flex justify-center" aria-hidden="true">
                 <div class="swipe-indicator bg-gray-300 rounded-full w-10 h-1"></div>
-            </div>
-            
-            <div class="modal-content p-6 pb-8">
+              </div>
+        
+              <div class="modal-content p-6 pb-8">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
-                    <button id="modal-close" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
+                  <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
+                  <button id="modal-close" class="text-gray-500 hover:text-gray-700" aria-label="Tutup modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
                 </div>
                 <div class="modal-body" id="modal-body">
-                    <!-- Dynamic content will be inserted here -->
+                  <!-- Konten dinamis -->
                 </div>
                 <div class="modal-footer mt-4 flex justify-end">
-                    <button class="secondary-button mr-2" id="modal-secondary-action">
-                        Secondary Action
-                    </button>
-                    <button class="primary-button" id="modal-primary-action">
-                        Primary Action
-                    </button>
+                  <button class="secondary-button mr-2" id="modal-secondary-action" aria-label="Aksi sekunder modal">Secondary Action</button>
+                  <button class="primary-button" id="modal-primary-action" aria-label="Aksi utama modal">Primary Action</button>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
+        </main>
+
 
     <script>
         // Modal functionality with swipe
