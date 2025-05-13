@@ -50,7 +50,6 @@
         }
         
         /* For the side panel effect */
-        /* Modal Mobile Styles */
         @media (max-width: 1023px) {
             .modal-container {
                 position: fixed;
@@ -65,22 +64,33 @@
                 max-height: 90vh;
                 transform: translateY(100%);
                 transition: transform 0.3s ease-out;
+                will-change: transform; /* Optimasi performa */
             }
         
             .modal-container.modal-open {
                 transform: translateY(0);
             }
         
-            .swipe-indicator-container {
-                cursor: grab;
-                touch-action: none;
-                user-select: none;
+            .modal-content {
+                max-height: calc(90vh - 60px); /* Space untuk swipe indicator */
+                overflow-y: auto;
+                transition: none; /* Kita handle secara manual */
             }
         
-            .modal-content {
-                transition: height 0.2s ease;
-                overflow-y: auto;
-                max-height: calc(90vh - 60px);
+            /* Swipe indicator styling */
+            .swipe-indicator-container {
+                padding: 8px 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                touch-action: none;
+            }
+        
+            .swipe-indicator {
+                width: 40px;
+                height: 4px;
+                background-color: #ddd;
+                border-radius: 2px;
             }
         }
         
@@ -348,6 +358,15 @@
                 align-items: flex-start;
 
             }
+        }
+        /* Tambahkan di CSS Anda */
+        .modal-container {
+            will-change: transform, height; /* Optimasi performa animasi */
+            backface-visibility: hidden; /* Mencegah flicker pada animasi */
+        }
+        
+        .modal-content {
+            transform-origin: top center; /* Untuk efek scale yang lebih natural */
         }
     </style>
 </head>
@@ -699,7 +718,10 @@
                 this.startY = e.touches ? e.touches[0].clientY : e.clientY;
                 this.currentY = this.startY;
                 this.isSwiping = true;
+                this.startHeight = this.container.offsetHeight;
                 this.container.style.transition = 'none';
+                this.content.style.transition = 'none';
+                this.overlay.style.transition = 'none';
             },
         
             handleTouchMove: function(e) {
@@ -711,16 +733,26 @@
                 // Only allow swiping down
                 if (deltaY > 0) {
                     this.currentY = y;
-                    const translateY = Math.min(deltaY, 100);
+                    
+                    // Calculate percentage swiped (0-1)
+                    const swipePercent = Math.min(deltaY / 300, 1);
+                    
+                    // 1. Apply translateY (visual movement)
+                    const translateY = deltaY;
                     this.container.style.transform = `translateY(${translateY}px)`;
                     
-                    // Calculate opacity for overlay (fade out as swipe down)
-                    const opacity = 1 - (deltaY / 200);
-                    this.overlay.style.opacity = opacity;
+                    // 2. Reduce height dynamically
+                    const heightReduction = swipePercent * 100; // Max 100px reduction
+                    const newHeight = this.startHeight - heightReduction;
+                    this.container.style.height = `${newHeight}px`;
                     
-                    // Reduce height of content
-                    const heightReduction = Math.min(deltaY / 2, 100);
-                    this.content.style.height = `calc(100% - ${heightReduction}px)`;
+                    // 3. Fade out overlay
+                    const overlayOpacity = 1 - swipePercent;
+                    this.overlay.style.opacity = overlayOpacity;
+                    
+                    // 4. Scale down content slightly for better effect
+                    const contentScale = 1 - (swipePercent * 0.1); // Max 10% scale down
+                    this.content.style.transform = `scale(${contentScale})`;
                 }
                 
                 e.preventDefault();
@@ -730,20 +762,42 @@
                 if (!this.isSwiping || !this.isMobile) return;
                 
                 this.isSwiping = false;
-                this.container.style.transition = 'transform 0.3s ease-out';
-                this.overlay.style.transition = 'opacity 0.3s ease-out';
-                
                 const deltaY = this.currentY - this.startY;
                 
-                // If swiped down enough, close the modal
-                if (deltaY > 100) {
-                    this.close();
+                // Reset transitions
+                this.container.style.transition = 'transform 0.3s ease-out, height 0.3s ease-out';
+                this.content.style.transition = 'transform 0.3s ease-out';
+                this.overlay.style.transition = 'opacity 0.3s ease-out';
+                
+                // If swiped down enough (30% of container height), close the modal
+                if (deltaY > this.container.offsetHeight * 0.3) {
+                    this.container.style.transform = `translateY(${this.container.offsetHeight}px)`;
+                    this.container.style.height = '0';
+                    this.overlay.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        this.close();
+                        // Reset styles after close
+                        this.resetModalStyles();
+                    }, 300);
                 } else {
-                    // Return to original position
+                    // Return to original position with animation
                     this.container.style.transform = 'translateY(0)';
+                    this.container.style.height = '';
+                    this.content.style.transform = '';
                     this.overlay.style.opacity = '1';
-                    this.content.style.height = '';
                 }
+            },
+        
+            resetModalStyles: function() {
+                // Reset all modified styles
+                this.container.style.transform = '';
+                this.container.style.height = '';
+                this.container.style.transition = '';
+                this.content.style.transform = '';
+                this.content.style.transition = '';
+                this.overlay.style.opacity = '';
+                this.overlay.style.transition = '';
             },
         
             init: function() {
