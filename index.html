@@ -516,9 +516,86 @@
             </div>
         </div>
     </div>
+    <!-- Modal Structure -->
+    <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-lg shadow-xl transform transition-all my-8 relative">
+            <div class="modal-content p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
+                    <button id="modal-close" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+                <div class="modal-footer mt-4 flex justify-end">
+                    <button class="secondary-button mr-2" id="modal-secondary-action">
+                        Secondary Action
+                    </button>
+                    <button class="primary-button" id="modal-primary-action">
+                        Primary Action
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Global chart variables
+        const modal = {
+            element: document.getElementById('modal'),
+            overlay: document.querySelector('.modal-overlay'),
+            title: document.getElementById('modal-title'),
+            body: document.getElementById('modal-body'),
+            closeBtn: document.getElementById('modal-close'),
+            primaryAction: document.getElementById('modal-primary-action'),
+            secondaryAction: document.getElementById('modal-secondary-action'),
+        
+            open: function(title, content, primaryAction = null, secondaryAction = null) {
+                this.title.textContent = title;
+                this.body.innerHTML = content;
+                
+                if (primaryAction) {
+                    this.primaryAction.textContent = primaryAction.text;
+                    this.primaryAction.onclick = primaryAction.action;
+                    this.primaryAction.classList.remove('hidden');
+                } else {
+                    this.primaryAction.classList.add('hidden');
+                }
+                
+                if (secondaryAction) {
+                    this.secondaryAction.textContent = secondaryAction.text;
+                    this.secondaryAction.onclick = secondaryAction.action;
+                    this.secondaryAction.classList.remove('hidden');
+                } else {
+                    this.secondaryAction.classList.add('hidden');
+                }
+                
+                this.element.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            },
+        
+            close: function() {
+                this.element.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            },
+        
+            init: function() {
+                this.closeBtn.addEventListener('click', () => this.close());
+                this.overlay.addEventListener('click', () => this.close());
+                
+                // Close modal with ESC key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !this.element.classList.contains('hidden')) {
+                        this.close();
+                    }
+                });
+            }
+        };
+        
+        // Initialize modal
+        modal.init();
         let plantChart = null;
         let salinityChart = null;
 
@@ -539,62 +616,271 @@
 
         // Function to populate info cards
         function populateInfoCards(data) {
-            const infoCardsContainer = document.getElementById('info-cards');
-            infoCardsContainer.innerHTML = ''; // Clear existing content
-
-            const cardData = [
-                {
-                    title: 'Jenis Mangrove',
-                    value: data.mangroveInfo.jenis,
-                    icon: 'fas fa-leaf',
-                    color: 'green'
-                },
-                {
-                    title: 'Lokasi',
-                    value: data.mangroveInfo.daerah,
-                    icon: 'fas fa-map-marker-alt',
-                    color: 'blue'
-                },
-                {
-                    title: 'Status Kondisi',
-                    value: data.mangroveInfo.kondisi,
-                    icon: 'fas fa-heartbeat',
-                    color: 'green'
-                }
-            ];
-
-            cardData.forEach(card => {
-                const cardElement = document.createElement('div');
-                cardElement.className = 'card info-card p-5';
-
-                let badgeClass = 'badge-green';
-                if (card.color === 'blue') badgeClass = 'badge-blue';
-                if (card.color === 'red') badgeClass = 'badge-red';
-
-                cardElement.innerHTML = `
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="text-sm text-gray-500">${card.title}</div>
-                        <div class="w-10 h-10 rounded-full bg-${card.color}-100 flex items-center justify-center text-${card.color}-600">
-                            <i class="${card.icon}"></i>
-                        </div>
+        const infoCardsContainer = document.getElementById('info-cards');
+        infoCardsContainer.innerHTML = ''; // Clear existing content
+    
+        const cardData = [
+            {
+                id: 'jenis-mangrove',
+                title: 'Jenis Mangrove',
+                value: data.mangroveInfo.jenis,
+                icon: 'fas fa-leaf',
+                color: 'green'
+            },
+            {
+                id: 'lokasi',
+                title: 'Lokasi',
+                value: data.mangroveInfo.daerah,
+                icon: 'fas fa-map-marker-alt',
+                color: 'blue'
+            },
+            {
+                id: 'status-kondisi',
+                title: 'Status Kondisi',
+                value: data.mangroveInfo.kondisi,
+                icon: 'fas fa-heartbeat',
+                color: 'green'
+            }
+        ];
+    
+        cardData.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card info-card p-5';
+    
+            let badgeClass = 'badge-green';
+            if (card.color === 'blue') badgeClass = 'badge-blue';
+            if (card.color === 'red') badgeClass = 'badge-red';
+    
+            cardElement.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm text-gray-500">${card.title}</div>
+                    <div class="w-10 h-10 rounded-full bg-${card.color}-100 flex items-center justify-center text-${card.color}-600">
+                        <i class="${card.icon}"></i>
                     </div>
-                    <h2 class="text-xl font-bold mb-3">${card.value}</h2>
-                    <div class="flex items-center justify-between">
-                        <span class="badge ${badgeClass}">
-                            <i class="fas fa-check-circle mr-1"></i> Terverifikasi
-                        </span>
-                        <button class="text-sm text-blue-600 hover:text-blue-800">Detail</button>
-                    </div>
-                `;
+                </div>
+                <h2 class="text-xl font-bold mb-3">${card.value}</h2>
+                <div class="flex items-center justify-between">
+                    <span class="badge ${badgeClass}">
+                        <i class="fas fa-check-circle mr-1"></i> Terverifikasi
+                    </span>
+                    <button class="detail-button text-sm text-blue-600 hover:text-blue-800" data-card-type="${card.id}">Detail</button>
+                </div>
+            `;
+    
+            infoCardsContainer.appendChild(cardElement);
+        });
 
-                infoCardsContainer.appendChild(cardElement);
+        // Add event listeners to detail buttons
+        document.querySelectorAll('.detail-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardType = this.getAttribute('data-card-type');
+                const content = getModalContent(cardType, data);
+                modal.open(cardData.find(c => c.id === cardType).title, content, {
+                    text: 'Tutup',
+                    action: () => modal.close()
+                });
             });
+        });
+        // Update dashboard stats
+        document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
+        document.getElementById('stat-growth-rate').textContent = '+28%';
+        document.getElementById('stat-health-index').textContent = '93%';
+        document.getElementById('last-updated').textContent = formattedDate;
+        
+        // Add event listener for "Lihat Detail" button in growth summary
+        document.querySelector('.card.p-5 .text-sm.text-blue-600').addEventListener('click', function() {
+            const content = getModalContent('ringkasan-pertumbuhan', data);
+            modal.open('Ringkasan Pertumbuhan', content, {
+                text: 'Ekspor Data',
+                action: () => {
+                    alert('Data akan diekspor dalam format CSV');
+                    modal.close();
+                }
+            }, {
+                text: 'Tutup',
+                action: () => modal.close()
+            });
+        });
 
-            // Update dashboard stats
-            document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
-            document.getElementById('stat-growth-rate').textContent = '+28%';
-            document.getElementById('stat-health-index').textContent = '93%';
-            document.getElementById('last-updated').textContent = formattedDate;
+        function getModalContent(cardType, data) {
+            switch(cardType) {
+                case 'jenis-mangrove':
+                    return `
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                    <i class="fas fa-leaf text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">${data.mangroveInfo.jenis}</h4>
+                                    <p class="text-gray-600">Jenis Mangrove yang Dominan</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Informasi Detail:</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Nama Latin:</span>
+                                        <span class="font-medium">Sonneratia alba</span>
+                                    </li>
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Ketinggian:</span>
+                                        <span class="font-medium">4-15 meter</span>
+                                    </li>
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Karakteristik:</span>
+                                        <span class="font-medium">Bunga putih, buah berbentuk seperti lonceng</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Persentase Populasi</p>
+                                    <p class="text-xl font-bold text-green-600">45%</p>
+                                </div>
+                                <div class="bg-blue-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Tingkat Pertumbuhan</p>
+                                    <p class="text-xl font-bold text-blue-600">+28%</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                case 'lokasi':
+                    return `
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                    <i class="fas fa-map-marker-alt text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">${data.mangroveInfo.daerah}</h4>
+                                    <p class="text-gray-600">Lokasi Mangrove</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Informasi Geografis:</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Koordinat:</span>
+                                        <span class="font-medium">6°59'24"S 110°24'36"E</span>
+                                    </li>
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Luas Area:</span>
+                                        <span class="font-medium">15.2 hektar</span>
+                                    </li>
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Jenis Tanah:</span>
+                                        <span class="font-medium">Tanah lumpur pantai</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <p class="text-gray-500">Peta Lokasi akan muncul di sini</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                case 'status-kondisi':
+                    return `
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                    <i class="fas fa-heartbeat text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">${data.mangroveInfo.kondisi}</h4>
+                                    <p class="text-gray-600">Status Kesehatan Mangrove</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Indikator Kesehatan:</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">Tingkat Kelangsungan Hidup</span>
+                                            <span class="text-sm font-medium">93%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-value progress-positive" style="width: 93%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">Kerapatan Daun</span>
+                                            <span class="text-sm font-medium">87%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-value progress-positive" style="width: 87%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">Tingkat Penyakit</span>
+                                            <span class="text-sm font-medium">5%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-value progress-negative" style="width: 5%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-amber-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Faktor Risiko</p>
+                                    <p class="text-xl font-bold text-amber-600">Rendah</p>
+                                </div>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Rekomendasi</p>
+                                    <p class="text-xl font-bold text-green-600">Pemantauan Rutin</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                case 'ringkasan-pertumbuhan':
+                    return `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-lg">Ringkasan Pertumbuhan</h4>
+                                    <p class="text-gray-600">Detail perkembangan mangrove</p>
+                                </div>
+                                <div class="relative">
+                                    <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-2">
+                                        <option>Mingguan</option>
+                                        <option>Bulanan</option>
+                                        <option>Tahunan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="modal-growth-chart"></canvas>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="border p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Total Tanaman</p>
+                                    <p class="text-xl font-bold">${data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString()}</p>
+                                </div>
+                                <div class="border p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Laju Pertumbuhan</p>
+                                    <p class="text-xl font-bold text-green-600">+28%</p>
+                                </div>
+                                <div class="border p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600">Indeks Kesehatan</p>
+                                    <p class="text-xl font-bold text-green-600">93%</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Analisis Trend:</h4>
+                                <p class="text-gray-700">Pertumbuhan mangrove menunjukkan trend positif dengan peningkatan sebesar 28% dalam 3 bulan terakhir. Tingkat kelangsungan hidup tanaman mencapai 93%, menunjukkan kondisi lingkungan yang mendukung.</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                default:
+                    return `<p>No content available for this card.</p>`;
+            }
         }
 
         // Function to create or update charts
