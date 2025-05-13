@@ -243,28 +243,6 @@
             color: var(--text-secondary);
         }
 
-        .loading-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px;
-        }
-
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: var(--primary-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -547,16 +525,6 @@
         // Today's date in DD/MM/YYYY format
         const today = new Date();
         const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-
-        // Show loading indicator
-        function showLoading() {
-            document.getElementById('loading-indicator').classList.remove('hidden');
-        }
-
-        // Hide loading indicator
-        function hideLoading() {
-            document.getElementById('loading-indicator').classList.add('hidden');
-        }
 
         // Format percentage with sign
         function formatPercentage(percentage) {
@@ -946,7 +914,6 @@
 
         // Fetch and load data
         function loadData() {
-            showLoading();
 
             // URL untuk data JSON - ganti dengan path yang benar
             const dataUrl = 'https://4211421036.github.io/mapps/mangrove_data.json';
@@ -1063,7 +1030,6 @@
 
                 // Untuk contoh ini, langsung gunakan mock data
                 initializeApp(mockData);
-                hideLoading();
             }, 800); // Simulasi delay 800ms untuk menunjukkan loading indicator
         }
 
@@ -1078,10 +1044,6 @@
             // Add event listeners
             document.getElementById('growth-period').addEventListener('change', function () {
                 // In a real app, would reload data or filter based on selection
-                showLoading();
-                setTimeout(() => {
-                    hideLoading();
-                }, 500);
             });
         }
 
