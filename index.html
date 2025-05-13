@@ -50,6 +50,41 @@
         }
         
         /* For the side panel effect */
+        /* Modal Mobile Styles */
+        @media (max-width: 1023px) {
+            .modal-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 1rem 1rem 0 0;
+                max-height: 90vh;
+                transform: translateY(100%);
+                transition: transform 0.3s ease-out;
+            }
+        
+            .modal-container.modal-open {
+                transform: translateY(0);
+            }
+        
+            .swipe-indicator-container {
+                cursor: grab;
+                touch-action: none;
+                user-select: none;
+            }
+        
+            .modal-content {
+                transition: height 0.2s ease;
+                overflow-y: auto;
+                max-height: calc(90vh - 60px);
+            }
+        }
+        
+        /* Desktop Styles */
         @media (min-width: 1024px) {
             .modal-container {
                 position: fixed;
@@ -60,10 +95,16 @@
                 width: 40%;
                 max-width: 600px;
                 border-radius: 0;
+                transform: translateX(100%);
+                transition: transform 0.3s ease-out;
             }
-            
-            .modal-overlay {
-                background-color: rgba(0, 0, 0, 0.3);
+        
+            .modal-container.modal-open {
+                transform: translateX(0);
+            }
+        
+            .swipe-indicator {
+                display: none;
             }
         }
 
@@ -556,8 +597,13 @@
     <!-- Modal Structure -->
     <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-lg shadow-xl transform transition-all my-8 relative">
-            <div class="modal-content p-6">
+        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-t-lg shadow-xl transform transition-all relative">
+            <!-- Swipe Indicator -->
+            <div class="swipe-indicator-container py-2 flex justify-center">
+                <div class="swipe-indicator bg-gray-300 rounded-full w-10 h-1"></div>
+            </div>
+            
+            <div class="modal-content p-6 pb-8">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
                     <button id="modal-close" class="text-gray-500 hover:text-gray-700">
@@ -580,14 +626,22 @@
     </div>
 
     <script>
+        // Modal functionality with swipe
         const modal = {
             element: document.getElementById('modal'),
             overlay: document.querySelector('.modal-overlay'),
+            container: document.querySelector('.modal-container'),
+            content: document.querySelector('.modal-content'),
             title: document.getElementById('modal-title'),
             body: document.getElementById('modal-body'),
             closeBtn: document.getElementById('modal-close'),
             primaryAction: document.getElementById('modal-primary-action'),
             secondaryAction: document.getElementById('modal-secondary-action'),
+            swipeIndicator: document.querySelector('.swipe-indicator'),
+            isMobile: window.innerWidth < 1024,
+            startY: 0,
+            currentY: 0,
+            isSwiping: false,
         
             open: function(title, content, primaryAction = null, secondaryAction = null) {
                 this.title.textContent = title;
@@ -611,22 +665,113 @@
                 
                 this.element.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
+                
+                // Trigger reflow to enable animation
+                void this.container.offsetWidth;
+                
+                if (this.isMobile) {
+                    this.container.classList.add('modal-open');
+                    this.container.style.transform = 'translateY(0)';
+                } else {
+                    this.container.classList.add('modal-open');
+                    this.container.style.transform = 'translateX(0)';
+                }
             },
         
             close: function() {
-                this.element.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
+                if (this.isMobile) {
+                    this.container.style.transform = 'translateY(100%)';
+                } else {
+                    this.container.style.transform = 'translateX(100%)';
+                }
+                
+                // Wait for animation to finish before hiding
+                setTimeout(() => {
+                    this.element.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                    this.container.classList.remove('modal-open');
+                }, 300);
+            },
+        
+            handleTouchStart: function(e) {
+                if (!this.isMobile) return;
+                
+                this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+                this.currentY = this.startY;
+                this.isSwiping = true;
+                this.container.style.transition = 'none';
+            },
+        
+            handleTouchMove: function(e) {
+                if (!this.isSwiping || !this.isMobile) return;
+                
+                const y = e.touches ? e.touches[0].clientY : e.clientY;
+                const deltaY = y - this.startY;
+                
+                // Only allow swiping down
+                if (deltaY > 0) {
+                    this.currentY = y;
+                    const translateY = Math.min(deltaY, 100);
+                    this.container.style.transform = `translateY(${translateY}px)`;
+                    
+                    // Calculate opacity for overlay (fade out as swipe down)
+                    const opacity = 1 - (deltaY / 200);
+                    this.overlay.style.opacity = opacity;
+                    
+                    // Reduce height of content
+                    const heightReduction = Math.min(deltaY / 2, 100);
+                    this.content.style.height = `calc(100% - ${heightReduction}px)`;
+                }
+                
+                e.preventDefault();
+            },
+        
+            handleTouchEnd: function() {
+                if (!this.isSwiping || !this.isMobile) return;
+                
+                this.isSwiping = false;
+                this.container.style.transition = 'transform 0.3s ease-out';
+                this.overlay.style.transition = 'opacity 0.3s ease-out';
+                
+                const deltaY = this.currentY - this.startY;
+                
+                // If swiped down enough, close the modal
+                if (deltaY > 100) {
+                    this.close();
+                } else {
+                    // Return to original position
+                    this.container.style.transform = 'translateY(0)';
+                    this.overlay.style.opacity = '1';
+                    this.content.style.height = '';
+                }
             },
         
             init: function() {
                 this.closeBtn.addEventListener('click', () => this.close());
                 this.overlay.addEventListener('click', () => this.close());
                 
+                // Touch events for mobile swipe
+                const swipeArea = this.isMobile ? this.container : this.overlay;
+                swipeArea.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+                swipeArea.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+                swipeArea.addEventListener('touchend', () => this.handleTouchEnd());
+                
+                // Mouse events for testing on desktop
+                swipeArea.addEventListener('mousedown', (e) => this.handleTouchStart(e));
+                swipeArea.addEventListener('mousemove', (e) => this.handleTouchMove(e));
+                swipeArea.addEventListener('mouseup', () => this.handleTouchEnd());
+                swipeArea.addEventListener('mouseleave', () => this.handleTouchEnd());
+                
                 // Close modal with ESC key
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && !this.element.classList.contains('hidden')) {
                         this.close();
                     }
+                });
+                
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    this.isMobile = window.innerWidth < 1024;
                 });
             }
         };
@@ -711,33 +856,38 @@
             document.querySelectorAll('.detail-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const cardType = this.getAttribute('data-card-type');
+                    const cardTitle = cardData.find(c => c.id === cardType).title;
                     const content = getModalContent(cardType, data);
-                    modal.open(cardData.find(c => c.id === cardType).title, content, {
+                    
+                    modal.open(cardTitle, content, {
                         text: 'Tutup',
                         action: () => modal.close()
                     });
                 });
             });
+        
+            // Add event listener for "Lihat Detail" button in growth summary
+            const detailButton = document.querySelector('.card.p-5 .text-sm.text-blue-600');
+            if (detailButton) {
+                detailButton.addEventListener('click', function() {
+                    const content = getModalContent('ringkasan-pertumbuhan', data);
+                    modal.open('Ringkasan Pertumbuhan', content, {
+                        text: 'Ekspor Data',
+                        action: () => {
+                            alert('Data akan diekspor dalam format CSV');
+                            modal.close();
+                        }
+                    }, {
+                        text: 'Tutup',
+                        action: () => modal.close()
+                    });
+                });
+            }
             // Update dashboard stats
             document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
             document.getElementById('stat-growth-rate').textContent = '+28%';
             document.getElementById('stat-health-index').textContent = '93%';
             document.getElementById('last-updated').textContent = formattedDate;
-            
-            // Add event listener for "Lihat Detail" button in growth summary
-            document.querySelector('.card.p-5 .text-sm.text-blue-600').addEventListener('click', function() {
-                const content = getModalContent('ringkasan-pertumbuhan', data);
-                modal.open('Ringkasan Pertumbuhan', content, {
-                    text: 'Ekspor Data',
-                    action: () => {
-                        alert('Data akan diekspor dalam format CSV');
-                        modal.close();
-                    }
-                }, {
-                    text: 'Tutup',
-                    action: () => modal.close()
-                });
-            });
         }
 
         function getModalContent(cardType, data) {
