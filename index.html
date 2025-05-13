@@ -34,21 +34,22 @@
         body.modal-open {
             overflow: hidden;
         }
-        
+
         /* Animation for modal */
         @keyframes modalSlideIn {
             from {
                 transform: translateX(100%);
             }
+
             to {
                 transform: translateX(0);
             }
         }
-        
+
         .modal-container {
             animation: modalSlideIn 0.3s ease-out;
         }
-        
+
         /* For the side panel effect */
         @media (max-width: 1023px) {
             .modal-container {
@@ -64,19 +65,22 @@
                 max-height: 90vh;
                 transform: translateY(100%);
                 transition: transform 0.3s ease-out;
-                will-change: transform; /* Optimasi performa */
+                will-change: transform;
+                /* Optimasi performa */
             }
-        
+
             .modal-container.modal-open {
                 transform: translateY(0);
             }
-        
+
             .modal-content {
-                max-height: calc(90vh - 60px); /* Space untuk swipe indicator */
+                max-height: calc(90vh - 60px);
+                /* Space untuk swipe indicator */
                 overflow-y: auto;
-                transition: none; /* Kita handle secara manual */
+                transition: none;
+                /* Kita handle secara manual */
             }
-        
+
             /* Swipe indicator styling */
             .swipe-indicator-container {
                 padding: 8px 0;
@@ -85,7 +89,7 @@
                 align-items: center;
                 touch-action: none;
             }
-        
+
             .swipe-indicator {
                 width: 40px;
                 height: 4px;
@@ -93,7 +97,7 @@
                 border-radius: 2px;
             }
         }
-        
+
         /* Desktop Styles */
         @media (min-width: 1024px) {
             .modal-container {
@@ -108,11 +112,11 @@
                 transform: translateX(100%);
                 transition: transform 0.3s ease-out;
             }
-        
+
             .modal-container.modal-open {
                 transform: translateX(0);
             }
-        
+
             .swipe-indicator {
                 display: none;
             }
@@ -359,14 +363,18 @@
 
             }
         }
+
         /* Tambahkan di CSS Anda */
         .modal-container {
-            will-change: transform, height; /* Optimasi performa animasi */
-            backface-visibility: hidden; /* Mencegah flicker pada animasi */
+            will-change: transform, height;
+            /* Optimasi performa animasi */
+            backface-visibility: hidden;
+            /* Mencegah flicker pada animasi */
         }
-        
+
         .modal-content {
-            transform-origin: top center; /* Untuk efek scale yang lebih natural */
+            transform-origin: top center;
+            /* Untuk efek scale yang lebih natural */
         }
     </style>
 </head>
@@ -374,22 +382,23 @@
 <body>
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
-        <nav class="navbar flex items-center justify-between p-4">
+        <nav class="navbar flex items-center justify-between p-4" role="navigation" aria-label="Main Navigation"></nav>
             <div class="flex items-center space-x-2">
-                <div class="text-green-600 text-2xl">
+                <div class="text-green-600 text-2xl" aria-hidden="true"></div>
                     <i class="fas fa-seedling"></i>
                 </div>
                 <h1 class="text-lg font-bold text-gray-800">Pemantauan Mangrove</h1>
             </div>
             <div class="flex items-center gap-4">
-                <button type="button" class="action-button" title="Notifications">
+                <button type="button" class="action-button" title="Notifications" aria-label="Notifications"></button>
                     <i class="fas fa-bell"></i>
                 </button>
-                <button type="button" class="action-button" title="Share">
+                <button type="button" class="action-button" title="Share" aria-label="Share"></button>
                     <i class="fas fa-share-alt"></i>
                 </button>
                 <div
-                    class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
+                    class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold"
+                    aria-label="User Profile"></div>
                     <i class="fas fa-user"></i>
                 </div>
             </div>
@@ -399,35 +408,37 @@
         <div class="bg-white border-b border-gray-200 px-4 py-3">
             <div class="flex items-center justify-between mobile">
                 <div class="flex items-center gap-6">
-                    <a href="#" class="text-sm font-medium text-gray-900 flex items-center">
-                        <i class="fas fa-home mr-2"></i> Home
+                    <a href="#" class="text-sm font-medium text-gray-900 flex items-center" aria-current="page">
+                        <i class="fas fa-home mr-2" aria-hidden="true"></i> Home
                     </a>
-                    <a href="https://ee-izzmhmd53.projects.earthengine.app/view/mangrove-ecosystem-monitoring-platforms" class="text-sm font-medium text-green-600 flex items-center">
-                        <i class="fas fa-chart-line mr-2"></i> Pemantauan Mangrove
+                    <a href="https://ee-izzmhmd53.projects.earthengine.app/view/mangrove-ecosystem-monitoring-platforms"
+                        class="text-sm font-medium text-green-600 flex items-center" title="Pemantauan Mangrove">Pemantauan Mangrove</a>
+                        <i class="fas fa-chart-line mr-2" aria-hidden="true"></i> Pemantauan Mangrove
                     </a>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="relative">
-                        <input type="text" placeholder="Cari data..."
+                        <label for="search-input" class="sr-only">Cari data</label>
+                        <input id="search-input" type="text" placeholder="Cari data..."
                             class="pl-8 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400" aria-hidden="true"></i>
                     </div>
-                    <button type="button" class="primary-button">
-                        <i class="fas fa-filter mr-1"></i> Filter
+                    <button type="button" class="primary-button" aria-label="Filter">
+                        <i class="fas fa-filter mr-1" aria-hidden="true"></i> Filter
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-4">
+        <main class="flex-1 p-4" role="main">
             <!-- Mangrove Info Cards -->
-            <div id="info-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <section id="info-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" aria-label="Mangrove Info Cards">
                 <!-- Will be populated from JSON -->
-            </div>
+            </section>
 
             <!-- Main Dashboard Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6" aria-label="Dashboard Statistics">
                 <div class="card p-5">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-semibold">Ringkasan Pertumbuhan</h3>
@@ -443,23 +454,23 @@
                     </div>
                     <div class="grid grid-cols-3 gap-2 mb-4">
                         <div class="dashboard-stat">
-                            <div class="stat-value text-green-600" id="stat-total-plants">0</div>
+                            <div class="stat-value text-green-600" id="stat-total-plants" aria-live="polite">0</div>
                             <div class="stat-label">Total Tanaman</div>
                         </div>
                         <div class="dashboard-stat">
-                            <div class="stat-value text-blue-600" id="stat-growth-rate">0%</div>
+                            <div class="stat-value text-blue-600" id="stat-growth-rate" aria-live="polite">0%</div>
                             <div class="stat-label">Laju Pertumbuhan</div>
                         </div>
                         <div class="dashboard-stat">
-                            <div class="stat-value text-amber-600" id="stat-health-index">0%</div>
+                            <div class="stat-value text-amber-600" id="stat-health-index" aria-live="polite">0%</div>
                             <div class="stat-label">Indeks Kesehatan</div>
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-500">Terakhir diperbarui: <span
                                 id="last-updated">--/--/----</span></span>
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat
-                            Detail</button>
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                            aria-label="Lihat Detail">Lihat Detail</button>
                     </div>
                 </div>
 
@@ -469,7 +480,8 @@
                             <h3 class="font-semibold">Distribusi Jenis Mangrove</h3>
                             <p class="text-sm text-gray-500">Persentase populasi berdasarkan jenis</p>
                         </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="More options">
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="More options"
+                            aria-label="More options">
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
                     </div>
@@ -480,7 +492,8 @@
                                     <span class="text-sm font-medium">Sonneratia</span>
                                     <span class="text-sm font-medium">45%</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-label="Progress 45%"
+                                    aria-valuemax="100">
                                     <div class="progress-value progress-positive" style="width: 45%"></div>
                                 </div>
                             </div>
@@ -489,7 +502,8 @@
                                     <span class="text-sm font-medium">Rhizophora</span>
                                     <span class="text-sm font-medium">30%</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-label="Progress 30%"
+                                    aria-valuemax="100">
                                     <div class="progress-value progress-positive" style="width: 30%"></div>
                                 </div>
                             </div>
@@ -498,7 +512,8 @@
                                     <span class="text-sm font-medium">Avicennia</span>
                                     <span class="text-sm font-medium">15%</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="15" aria-valuemin="0"
+                                    aria-valuemax="100">
                                     <div class="progress-value progress-positive" style="width: 15%"></div>
                                 </div>
                             </div>
@@ -507,51 +522,53 @@
                                     <span class="text-sm font-medium">Lainnya</span>
                                     <span class="text-sm font-medium">10%</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0"
+                                    aria-valuemax="100">
                                     <div class="progress-value progress-positive" style="width: 10%"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="hidden md:block w-40 h-40 relative">
+                        <div class="hidden md:block w-40 h-40 relative" aria-hidden="true">
                             <div class="rounded-full w-40 h-40 bg-gray-100 flex items-center justify-center">
                                 <div class="text-lg font-bold text-gray-700">4 Jenis</div>
                             </div>
                             <div class="absolute top-0 left-0 w-40 h-40">
-                                <svg viewBox="0 0 100 100">
+                                <svg viewBox="0 0 100 100" aria-hidden="true">
                                     <!-- Pie chart segments - would be dynamic in real usage -->
-                                    <path d="M 50,50 L 50,0 A 50,50 0 0,1 97.55,34.55 z" fill="#059669" />
-                                    <path d="M 50,50 L 97.55,34.55 A 50,50 0 0,1 65.45,97.55 z" fill="#0369a1" />
-                                    <path d="M 50,50 L 65.45,97.55 A 50,50 0 0,1 0,50 z" fill="#8b5cf6" />
-                                    <path d="M 50,50 L 0,50 A 50,50 0 0,1 50,0 z" fill="#f59e0b" />
+                                    <path d="M 50,50 L 50,0 A 50,50 0 0,1 97.55,34.55 z" fill="#059669"></path>
+                                    <path d="M 50,50 L 97.55,34.55 A 50,50 0 0,1 65.45,97.55 z" fill="#0369a1"></path>
+                                    <path d="M 50,50 L 65.45,97.55 A 50,50 0 0,1 0,50 z" fill="#8b5cf6"></path>
+                                    <path d="M 50,50 L 0,50 A 50,50 0 0,1 50,0 z" fill="#f59e0b"></path>
                                 </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Growth Charts and Images -->
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+            <section class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6" aria-label="Growth Charts and Monitoring Images">
                 <div class="card p-5 col-span-1 lg:col-span-3">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h3 class="font-semibold">Jumlah Pertumbuhan Tanaman</h3>
                             <p class="text-sm text-gray-500">Perkembangan populasi mangrove dari waktu ke waktu</p>
                         </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Download Data">
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Download Data"
+                            aria-label="Download Data">
                             <i class="fas fa-download"></i>
                         </button>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="plantChart"></canvas>
+                    <div class="chart-container"></div>
+                        <canvas id="plantChart" role="img" aria-label="Grafik Pertumbuhan Tanaman"></canvas>
                     </div>
                     <div class="chart-legend">
                         <div class="legend-item">
                             <div class="legend-color" style="background-color: #059669;"></div>
                             <span class="text-sm">Pertumbuhan</span>
                         </div>
-                        <div class="legend-item">
+                        <div class="legend-item"></div>
                             <div class="legend-color" style="background-color: rgba(5, 150, 105, 0.2);"></div>
                             <span class="text-sm">Proyeksi</span>
                         </div>
@@ -559,33 +576,36 @@
                 </div>
                 <div class="card p-5">
                     <h3 class="font-semibold mb-4">Foto Pemantauan</h3>
-                    <div class="image-list" id="monitoring-images">
+                    <div class="image-list" id="monitoring-images" aria-label="Monitoring Images">
                         <!-- Will be populated from JSON -->
                     </div>
                     <div class="mt-4 text-center">
-                        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Semua</button>
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium" aria-label="Lihat Semua">
+                            Lihat Semua
+                        </button>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Actions and Salinity -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6" aria-label="Actions and Salinity Monitoring">
                 <div class="card p-5">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h3 class="font-semibold">Tindakan yang Dilakukan</h3>
                             <p class="text-sm text-gray-500">Efektivitas tindakan konservasi mangrove</p>
                         </div>
-                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Filter Options">
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Filter Options"
+                            aria-label="Filter Options">
                             <i class="fas fa-filter"></i>
                         </button>
                     </div>
-                    <div id="actions-list" class="space-y-4">
+                    <div id="actions-list" class="space-y-4" aria-label="List of Actions">
                         <!-- Will be populated from JSON -->
                     </div>
                     <div class="mt-4 text-center">
-                        <button class="primary-button">
-                            <i class="fas fa-plus mr-1"></i> Tambah Tindakan
+                        <button class="primary-button" aria-label="Tambah Tindakan">
+                            <i class="fas fa-plus mr-1" aria-hidden="true"></i> Tambah Tindakan
                         </button>
                     </div>
                 </div>
@@ -603,44 +623,49 @@
                         </div>
                     </div>
                     <div class="chart-container">
-                        <canvas id="salinityChart"></canvas>
+                        <canvas id="salinityChart" role="img" aria-label="Grafik Monitoring Salinitas"></canvas>
                     </div>
                     <div class="mt-4 text-center">
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Detail
-                            Monitoring</button>
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                            aria-label="Lihat Detail Monitoring">Lihat Detail Monitoring</button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
     <!-- Modal Structure -->
-    <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div id="modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-labelledby="modal-title"
+        aria-hidden="true">
         <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-lg shadow-xl transform transition-all my-8 relative">
+        <div
+            class="modal-container bg-white w-full max-w-2xl mx-auto rounded-lg shadow-xl transform transition-all my-8 relative">
             <div class="modal-content p-6">
-        <div class="modal-container bg-white w-full max-w-2xl mx-auto rounded-t-lg shadow-xl transform transition-all relative">
-            <!-- Swipe Indicator -->
-            <div class="swipe-indicator-container py-2 flex justify-center">
-                <div class="swipe-indicator bg-gray-300 rounded-full w-10 h-1"></div>
-            </div>
-            
-            <div class="modal-content p-6 pb-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
-                    <button id="modal-close" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body" id="modal-body">
-                    <!-- Dynamic content will be inserted here -->
-                </div>
-                <div class="modal-footer mt-4 flex justify-end">
-                    <button class="secondary-button mr-2" id="modal-secondary-action">
-                        Secondary Action
-                    </button>
-                    <button class="primary-button" id="modal-primary-action">
-                        Primary Action
-                    </button>
+                <div
+                    class="modal-container bg-white w-full max-w-2xl mx-auto rounded-t-lg shadow-xl transform transition-all relative">
+                    <!-- Swipe Indicator -->
+                    <div class="swipe-indicator-container py-2 flex justify-center" aria-hidden="true">
+                        <div class="swipe-indicator bg-gray-300 rounded-full w-10 h-1"></div>
+                    </div>
+
+                    <div class="modal-content p-6 pb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold" id="modal-title">Modal Title</h3>
+                            <button id="modal-close" class="text-gray-500 hover:text-gray-700" aria-label="Close Modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="modal-body">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                        <div class="modal-footer mt-4 flex justify-end">
+                            <button type="button" class="secondary-button mr-2" id="modal-secondary-action" aria-label="Secondary Action">
+                                Secondary Action
+                            </button>
+                            <button type="button" class="primary-button" id="modal-primary-action" aria-label="Primary Action">
+                                Primary Action
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -664,11 +689,11 @@
             startY: 0,
             currentY: 0,
             isSwiping: false,
-        
-            open: function(title, content, primaryAction = null, secondaryAction = null) {
+
+            open: function (title, content, primaryAction = null, secondaryAction = null) {
                 this.title.textContent = title;
                 this.body.innerHTML = content;
-                
+
                 if (primaryAction) {
                     this.primaryAction.textContent = primaryAction.text;
                     this.primaryAction.onclick = primaryAction.action;
@@ -676,7 +701,7 @@
                 } else {
                     this.primaryAction.classList.add('hidden');
                 }
-                
+
                 if (secondaryAction) {
                     this.secondaryAction.textContent = secondaryAction.text;
                     this.secondaryAction.onclick = secondaryAction.action;
@@ -684,13 +709,13 @@
                 } else {
                     this.secondaryAction.classList.add('hidden');
                 }
-                
+
                 this.element.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                
+
                 // Trigger reflow to enable animation
                 void this.container.offsetWidth;
-                
+
                 if (this.isMobile) {
                     this.container.classList.add('modal-open');
                     this.container.style.transform = 'translateY(0)';
@@ -699,14 +724,14 @@
                     this.container.style.transform = 'translateX(0)';
                 }
             },
-        
-            close: function() {
+
+            close: function () {
                 if (this.isMobile) {
                     this.container.style.transform = 'translateY(100%)';
                 } else {
                     this.container.style.transform = 'translateX(100%)';
                 }
-                
+
                 // Wait for animation to finish before hiding
                 setTimeout(() => {
                     this.element.classList.add('hidden');
@@ -714,10 +739,10 @@
                     this.container.classList.remove('modal-open');
                 }, 300);
             },
-        
-            handleTouchStart: function(e) {
+
+            handleTouchStart: function (e) {
                 if (!this.isMobile) return;
-                
+
                 this.startY = e.touches ? e.touches[0].clientY : e.clientY;
                 this.currentY = this.startY;
                 this.isSwiping = true;
@@ -726,58 +751,58 @@
                 this.content.style.transition = 'none';
                 this.overlay.style.transition = 'none';
             },
-        
-            handleTouchMove: function(e) {
+
+            handleTouchMove: function (e) {
                 if (!this.isSwiping || !this.isMobile) return;
-                
+
                 const y = e.touches ? e.touches[0].clientY : e.clientY;
                 const deltaY = y - this.startY;
-                
+
                 // Only allow swiping down
                 if (deltaY > 0) {
                     this.currentY = y;
-                    
+
                     // Calculate percentage swiped (0-1)
                     const swipePercent = Math.min(deltaY / 300, 1);
-                    
+
                     // 1. Apply translateY (visual movement)
                     const translateY = deltaY;
                     this.container.style.transform = `translateY(${translateY}px)`;
-                    
+
                     // 2. Reduce height dynamically
                     const heightReduction = swipePercent * 100; // Max 100px reduction
                     const newHeight = this.startHeight - heightReduction;
                     this.container.style.height = `${newHeight}px`;
-                    
+
                     // 3. Fade out overlay
                     const overlayOpacity = 1 - swipePercent;
                     this.overlay.style.opacity = overlayOpacity;
-                    
+
                     // 4. Scale down content slightly for better effect
                     const contentScale = 1 - (swipePercent * 0.1); // Max 10% scale down
                     this.content.style.transform = `scale(${contentScale})`;
                 }
-                
+
                 e.preventDefault();
             },
-        
-            handleTouchEnd: function() {
+
+            handleTouchEnd: function () {
                 if (!this.isSwiping || !this.isMobile) return;
-                
+
                 this.isSwiping = false;
                 const deltaY = this.currentY - this.startY;
-                
+
                 // Reset transitions
                 this.container.style.transition = 'transform 0.3s ease-out, height 0.3s ease-out';
                 this.content.style.transition = 'transform 0.3s ease-out';
                 this.overlay.style.transition = 'opacity 0.3s ease-out';
-                
+
                 // If swiped down enough (30% of container height), close the modal
                 if (deltaY > this.container.offsetHeight * 0.3) {
                     this.container.style.transform = `translateY(${this.container.offsetHeight}px)`;
                     this.container.style.height = '0';
                     this.overlay.style.opacity = '0';
-                    
+
                     setTimeout(() => {
                         this.close();
                         // Reset styles after close
@@ -791,8 +816,8 @@
                     this.overlay.style.opacity = '1';
                 }
             },
-        
-            resetModalStyles: function() {
+
+            resetModalStyles: function () {
                 // Reset all modified styles
                 this.container.style.transform = '';
                 this.container.style.height = '';
@@ -802,37 +827,37 @@
                 this.overlay.style.opacity = '';
                 this.overlay.style.transition = '';
             },
-        
-            init: function() {
+
+            init: function () {
                 this.closeBtn.addEventListener('click', () => this.close());
                 this.overlay.addEventListener('click', () => this.close());
-                
+
                 // Touch events for mobile swipe
                 const swipeArea = this.isMobile ? this.container : this.overlay;
                 swipeArea.addEventListener('touchstart', (e) => this.handleTouchStart(e));
                 swipeArea.addEventListener('touchmove', (e) => this.handleTouchMove(e));
                 swipeArea.addEventListener('touchend', () => this.handleTouchEnd());
-                
+
                 // Mouse events for testing on desktop
                 swipeArea.addEventListener('mousedown', (e) => this.handleTouchStart(e));
                 swipeArea.addEventListener('mousemove', (e) => this.handleTouchMove(e));
                 swipeArea.addEventListener('mouseup', () => this.handleTouchEnd());
                 swipeArea.addEventListener('mouseleave', () => this.handleTouchEnd());
-                
+
                 // Close modal with ESC key
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && !this.element.classList.contains('hidden')) {
                         this.close();
                     }
                 });
-                
+
                 // Handle window resize
                 window.addEventListener('resize', () => {
                     this.isMobile = window.innerWidth < 1024;
                 });
             }
         };
-        
+
         // Initialize modal
         modal.init();
         let plantChart = null;
@@ -857,7 +882,7 @@
         function populateInfoCards(data) {
             const infoCardsContainer = document.getElementById('info-cards');
             infoCardsContainer.innerHTML = ''; // Clear existing content
-        
+
             const cardData = [
                 {
                     id: 'jenis-mangrove',
@@ -881,15 +906,15 @@
                     color: 'green'
                 }
             ];
-        
+
             cardData.forEach(card => {
                 const cardElement = document.createElement('div');
                 cardElement.className = 'card info-card p-5';
-        
+
                 let badgeClass = 'badge-green';
                 if (card.color === 'blue') badgeClass = 'badge-blue';
                 if (card.color === 'red') badgeClass = 'badge-red';
-        
+
                 cardElement.innerHTML = `
                     <div class="flex items-center justify-between mb-2">
                         <div class="text-sm text-gray-500">${card.title}</div>
@@ -905,28 +930,28 @@
                         <button class="detail-button text-sm text-blue-600 hover:text-blue-800" data-card-type="${card.id}">Detail</button>
                     </div>
                 `;
-        
+
                 infoCardsContainer.appendChild(cardElement);
             });
-    
+
             // Add event listeners to detail buttons
             document.querySelectorAll('.detail-button').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const cardType = this.getAttribute('data-card-type');
                     const cardTitle = cardData.find(c => c.id === cardType).title;
                     const content = getModalContent(cardType, data);
-                    
+
                     modal.open(cardTitle, content, {
                         text: 'Tutup',
                         action: () => modal.close()
                     });
                 });
             });
-        
+
             // Add event listener for "Lihat Detail" button in growth summary
             const detailButton = document.querySelector('.card.p-5 .text-sm.text-blue-600');
             if (detailButton) {
-                detailButton.addEventListener('click', function() {
+                detailButton.addEventListener('click', function () {
                     const content = getModalContent('ringkasan-pertumbuhan', data);
                     modal.open('Ringkasan Pertumbuhan', content, {
                         text: 'Ekspor Data',
@@ -948,7 +973,7 @@
         }
 
         function getModalContent(cardType, data) {
-            switch(cardType) {
+            switch (cardType) {
                 case 'jenis-mangrove':
                     return `
                         <div class="space-y-4">
@@ -990,7 +1015,7 @@
                             </div>
                         </div>
                     `;
-                    
+
                 case 'lokasi':
                     return `
                         <div class="space-y-4">
@@ -1025,7 +1050,7 @@
                             </div>
                         </div>
                     `;
-                    
+
                 case 'status-kondisi':
                     return `
                         <div class="space-y-4">
@@ -1082,7 +1107,7 @@
                             </div>
                         </div>
                     `;
-                    
+
                 case 'ringkasan-pertumbuhan':
                     return `
                         <div class="space-y-4">
@@ -1122,7 +1147,7 @@
                             </div>
                         </div>
                     `;
-                    
+
                 default:
                     return `<p>No content available for this card.</p>`;
             }
