@@ -653,91 +653,92 @@
 
         // Function to populate info cards
         function populateInfoCards(data) {
-        const infoCardsContainer = document.getElementById('info-cards');
-        infoCardsContainer.innerHTML = ''; // Clear existing content
-    
-        const cardData = [
-            {
-                id: 'jenis-mangrove',
-                title: 'Jenis Mangrove',
-                value: data.mangroveInfo.jenis,
-                icon: 'fas fa-leaf',
-                color: 'green'
-            },
-            {
-                id: 'lokasi',
-                title: 'Lokasi',
-                value: data.mangroveInfo.daerah,
-                icon: 'fas fa-map-marker-alt',
-                color: 'blue'
-            },
-            {
-                id: 'status-kondisi',
-                title: 'Status Kondisi',
-                value: data.mangroveInfo.kondisi,
-                icon: 'fas fa-heartbeat',
-                color: 'green'
-            }
-        ];
-    
-        cardData.forEach(card => {
-            const cardElement = document.createElement('div');
-            cardElement.className = 'card info-card p-5';
-    
-            let badgeClass = 'badge-green';
-            if (card.color === 'blue') badgeClass = 'badge-blue';
-            if (card.color === 'red') badgeClass = 'badge-red';
-    
-            cardElement.innerHTML = `
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-sm text-gray-500">${card.title}</div>
-                    <div class="w-10 h-10 rounded-full bg-${card.color}-100 flex items-center justify-center text-${card.color}-600">
-                        <i class="${card.icon}"></i>
+            const infoCardsContainer = document.getElementById('info-cards');
+            infoCardsContainer.innerHTML = ''; // Clear existing content
+        
+            const cardData = [
+                {
+                    id: 'jenis-mangrove',
+                    title: 'Jenis Mangrove',
+                    value: data.mangroveInfo.jenis,
+                    icon: 'fas fa-leaf',
+                    color: 'green'
+                },
+                {
+                    id: 'lokasi',
+                    title: 'Lokasi',
+                    value: data.mangroveInfo.daerah,
+                    icon: 'fas fa-map-marker-alt',
+                    color: 'blue'
+                },
+                {
+                    id: 'status-kondisi',
+                    title: 'Status Kondisi',
+                    value: data.mangroveInfo.kondisi,
+                    icon: 'fas fa-heartbeat',
+                    color: 'green'
+                }
+            ];
+        
+            cardData.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card info-card p-5';
+        
+                let badgeClass = 'badge-green';
+                if (card.color === 'blue') badgeClass = 'badge-blue';
+                if (card.color === 'red') badgeClass = 'badge-red';
+        
+                cardElement.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-gray-500">${card.title}</div>
+                        <div class="w-10 h-10 rounded-full bg-${card.color}-100 flex items-center justify-center text-${card.color}-600">
+                            <i class="${card.icon}"></i>
+                        </div>
                     </div>
-                </div>
-                <h2 class="text-xl font-bold mb-3">${card.value}</h2>
-                <div class="flex items-center justify-between">
-                    <span class="badge ${badgeClass}">
-                        <i class="fas fa-check-circle mr-1"></i> Terverifikasi
-                    </span>
-                    <button class="detail-button text-sm text-blue-600 hover:text-blue-800" data-card-type="${card.id}">Detail</button>
-                </div>
-            `;
+                    <h2 class="text-xl font-bold mb-3">${card.value}</h2>
+                    <div class="flex items-center justify-between">
+                        <span class="badge ${badgeClass}">
+                            <i class="fas fa-check-circle mr-1"></i> Terverifikasi
+                        </span>
+                        <button class="detail-button text-sm text-blue-600 hover:text-blue-800" data-card-type="${card.id}">Detail</button>
+                    </div>
+                `;
+        
+                infoCardsContainer.appendChild(cardElement);
+            });
     
-            infoCardsContainer.appendChild(cardElement);
-        });
-
-        // Add event listeners to detail buttons
-        document.querySelectorAll('.detail-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const cardType = this.getAttribute('data-card-type');
-                const content = getModalContent(cardType, data);
-                modal.open(cardData.find(c => c.id === cardType).title, content, {
+            // Add event listeners to detail buttons
+            document.querySelectorAll('.detail-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardType = this.getAttribute('data-card-type');
+                    const content = getModalContent(cardType, data);
+                    modal.open(cardData.find(c => c.id === cardType).title, content, {
+                        text: 'Tutup',
+                        action: () => modal.close()
+                    });
+                });
+            });
+            // Update dashboard stats
+            document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
+            document.getElementById('stat-growth-rate').textContent = '+28%';
+            document.getElementById('stat-health-index').textContent = '93%';
+            document.getElementById('last-updated').textContent = formattedDate;
+            
+            // Add event listener for "Lihat Detail" button in growth summary
+            document.querySelector('.card.p-5 .text-sm.text-blue-600').addEventListener('click', function() {
+                const content = getModalContent('ringkasan-pertumbuhan', data);
+                modal.open('Ringkasan Pertumbuhan', content, {
+                    text: 'Ekspor Data',
+                    action: () => {
+                        alert('Data akan diekspor dalam format CSV');
+                        modal.close();
+                    }
+                }, {
                     text: 'Tutup',
                     action: () => modal.close()
                 });
             });
-        });
-        // Update dashboard stats
-        document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
-        document.getElementById('stat-growth-rate').textContent = '+28%';
-        document.getElementById('stat-health-index').textContent = '93%';
-        document.getElementById('last-updated').textContent = formattedDate;
-        
-        // Add event listener for "Lihat Detail" button in growth summary
-        document.querySelector('.card.p-5 .text-sm.text-blue-600').addEventListener('click', function() {
-            const content = getModalContent('ringkasan-pertumbuhan', data);
-            modal.open('Ringkasan Pertumbuhan', content, {
-                text: 'Ekspor Data',
-                action: () => {
-                    alert('Data akan diekspor dalam format CSV');
-                    modal.close();
-                }
-            }, {
-                text: 'Tutup',
-                action: () => modal.close()
-            });
-        });
+        }
 
         function getModalContent(cardType, data) {
             switch(cardType) {
