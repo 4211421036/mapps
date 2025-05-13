@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,41 +9,106 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f9fafb;
+        :root {
+            --primary-color: #059669;
+            --primary-light: #d1fae5;
+            --secondary-color: #0369a1;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-light: #f9fafb;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+        }
+
         .navbar {
             background-color: #fff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .card {
             border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
             background-color: white;
             transition: all 0.3s ease;
         }
+
         .card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
+        .info-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .gradient-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
         .info-title {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 0.875rem;
         }
+
         .info-value {
             font-size: 1.5rem;
             font-weight: 600;
         }
+
         .action-button {
-            color: #4b5563;
+            color: var(--text-secondary);
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
             transition: all 0.2s ease;
         }
+
         .action-button:hover {
-            background-color: #f3f4f6;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
             border-radius: 8px;
         }
+
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            background-color: #047857;
+        }
+
+        .text-link {
+            color: var(--secondary-color);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .text-link:hover {
+            color: #075985;
+        }
+
         .table-row {
             display: flex;
             align-items: center;
@@ -50,214 +116,617 @@
             padding: 0.75rem 0;
             border-bottom: 1px solid #e5e7eb;
         }
+
         .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             object-fit: cover;
         }
+
         .image-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 1rem;
         }
+
         .image-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
+
+        .image-item:hover {
+            background-color: #f3f4f6;
+        }
+
         .progress-bar {
             height: 8px;
             background-color: #e5e7eb;
             border-radius: 4px;
             overflow: hidden;
+            margin: 0.5rem 0;
         }
+
         .progress-value {
             height: 100%;
-            background-color: #4b5563;
+            border-radius: 4px;
         }
+
+        .progress-positive {
+            background-color: var(--primary-color);
+        }
+
+        .progress-negative {
+            background-color: #ef4444;
+        }
+
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
+
+        .chart-legend {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-green {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .badge-blue {
+            background-color: #dbeafe;
+            color: var(--secondary-color);
+        }
+
+        .badge-red {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+
+        .status-active {
+            background-color: var(--primary-color);
+        }
+
+        .status-pending {
+            background-color: #f59e0b;
+        }
+
+        .dashboard-stat {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
             .chart-container {
                 height: 250px;
+            }
+
+            .image-item {
+                padding: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .mobile {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                flex-wrap: wrap;
+                align-content: space-between;
+                justify-content: center;
+                align-items: flex-start;
+
             }
         }
     </style>
 </head>
+
 <body>
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
         <nav class="navbar flex items-center justify-between p-4">
-            <div class="flex items-center">
-                <h1 class="text-lg font-semibold">Pemantauan Mangrove app</h1>
+            <div class="flex items-center space-x-2">
+                <div class="text-green-600 text-2xl">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h1 class="text-lg font-bold text-gray-800">Pemantauan Mangrove</h1>
             </div>
             <div class="flex items-center gap-4">
-                <button class="action-button">
-                    <i class="fas fa-share-alt"></i> share
+                <button type="button" class="action-button" title="Notifications">
+                    <i class="fas fa-bell"></i>
                 </button>
-                <div class="w-8 h-8 rounded-full bg-gray-500"></div>
+                <button type="button" class="action-button" title="Share">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <div
+                    class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
         </nav>
 
         <!-- Sub Navigation -->
-        <div class="bg-white border-b border-gray-200 px-4 py-2">
-            <div class="flex items-center justify-between">
+        <div class="bg-white border-b border-gray-200 px-4 py-3">
+            <div class="flex items-center justify-between mobile">
                 <div class="flex items-center gap-6">
-                    <a href="#" class="text-sm font-medium text-gray-900">Home</a>
-                    <a href="#" class="text-sm font-medium text-gray-900">Pemantauan Mangrove dengan Satelit</a>
+                    <a href="#" class="text-sm font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                    <a href="#" class="text-sm font-medium text-green-600 flex items-center">
+                        <i class="fas fa-chart-line mr-2"></i> Pemantauan Mangrove
+                    </a>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="relative">
-                        <input type="text" placeholder="Search..." class="pl-8 pr-4 py-1 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <i class="fas fa-search absolute left-3 top-2 text-gray-400"></i>
+                        <input type="text" placeholder="Cari data..."
+                            class="pl-8 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
+                    <button type="button" class="primary-button">
+                        <i class="fas fa-filter mr-1"></i> Filter
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 p-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div class="card p-4">
-                    <div class="mb-1 text-sm text-gray-500">Jenis Mangrove</div>
-                    <h2 class="text-xl font-bold mb-2">Sonneratia</h2>
-                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
+            <!-- Loading Indicator (Hidden by default) -->
+            <div id="loading-indicator" class="loading-indicator hidden">
+                <div class="loading-spinner"></div>
+                <span class="ml-3">Memuat data...</span>
+            </div>
+
+            <!-- Mangrove Info Cards -->
+            <div id="info-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Will be populated from JSON -->
+            </div>
+
+            <!-- Main Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold">Ringkasan Pertumbuhan</h3>
+                        <div class="relative">
+                            <label for="growth-period" class="sr-only">Pilih Periode Pertumbuhan</label>
+                            <select id="growth-period"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-2">
+                                <option value="weekly">Mingguan</option>
+                                <option value="monthly">Bulanan</option>
+                                <option value="yearly">Tahunan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="dashboard-stat">
+                            <div class="stat-value text-green-600" id="stat-total-plants">0</div>
+                            <div class="stat-label">Total Tanaman</div>
+                        </div>
+                        <div class="dashboard-stat">
+                            <div class="stat-value text-blue-600" id="stat-growth-rate">0%</div>
+                            <div class="stat-label">Laju Pertumbuhan</div>
+                        </div>
+                        <div class="dashboard-stat">
+                            <div class="stat-value text-amber-600" id="stat-health-index">0%</div>
+                            <div class="stat-label">Indeks Kesehatan</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">Terakhir diperbarui: <span
+                                id="last-updated">--/--/----</span></span>
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat
+                            Detail</button>
+                    </div>
                 </div>
-                <div class="card p-4">
-                    <div class="mb-1 text-sm text-gray-500">Daerah</div>
-                    <h2 class="text-xl font-bold mb-2">Pantai Mangunharjo</h2>
-                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
-                </div>
-                <div class="card p-4">
-                    <div class="mb-1 text-sm text-gray-500">Kondisi Mangrove</div>
-                    <h2 class="text-xl font-bold mb-2">Mangrove Sehat</h2>
-                    <button class="text-sm text-blue-600">Ketahui lebih lanjut</button>
+
+                <div class="card p-5 col-span-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-semibold">Distribusi Jenis Mangrove</h3>
+                            <p class="text-sm text-gray-500">Persentase populasi berdasarkan jenis</p>
+                        </div>
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="More options">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1 space-y-4">
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium">Sonneratia</span>
+                                    <span class="text-sm font-medium">45%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value progress-positive" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium">Rhizophora</span>
+                                    <span class="text-sm font-medium">30%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value progress-positive" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium">Avicennia</span>
+                                    <span class="text-sm font-medium">15%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value progress-positive" style="width: 15%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium">Lainnya</span>
+                                    <span class="text-sm font-medium">10%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value progress-positive" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden md:block w-40 h-40 relative">
+                            <div class="rounded-full w-40 h-40 bg-gray-100 flex items-center justify-center">
+                                <div class="text-lg font-bold text-gray-700">4 Jenis</div>
+                            </div>
+                            <div class="absolute top-0 left-0 w-40 h-40">
+                                <svg viewBox="0 0 100 100">
+                                    <!-- Pie chart segments - would be dynamic in real usage -->
+                                    <path d="M 50,50 L 50,0 A 50,50 0 0,1 97.55,34.55 z" fill="#059669" />
+                                    <path d="M 50,50 L 97.55,34.55 A 50,50 0 0,1 65.45,97.55 z" fill="#0369a1" />
+                                    <path d="M 50,50 L 65.45,97.55 A 50,50 0 0,1 0,50 z" fill="#8b5cf6" />
+                                    <path d="M 50,50 L 0,50 A 50,50 0 0,1 50,0 z" fill="#f59e0b" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
-                <div class="card p-4 col-span-1 lg:col-span-3">
+            <!-- Growth Charts and Images -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+                <div class="card p-5 col-span-1 lg:col-span-3">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="text-sm text-gray-500">Jumlah Tanaman</h3>
+                            <h3 class="font-semibold">Jumlah Pertumbuhan Tanaman</h3>
+                            <p class="text-sm text-gray-500">Perkembangan populasi mangrove dari waktu ke waktu</p>
                         </div>
-                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-                            <div class="w-2 h-2 rounded-full bg-gray-500"></div>
-                        </div>
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Download Data">
+                            <i class="fas fa-download"></i>
+                        </button>
                     </div>
                     <div class="chart-container">
                         <canvas id="plantChart"></canvas>
                     </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #059669;"></div>
+                            <span class="text-sm">Pertumbuhan</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(5, 150, 105, 0.2);"></div>
+                            <span class="text-sm">Proyeksi</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card p-4">
-                    <h3 class="text-sm text-gray-500 mb-4">Foto Pemantauan Tanaman</h3>
-                    <div class="image-list" id="disease-images">
+                <div class="card p-5">
+                    <h3 class="font-semibold mb-4">Foto Pemantauan</h3>
+                    <div class="image-list" id="monitoring-images">
                         <!-- Will be populated from JSON -->
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Semua</button>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div class="card p-4">
-                    <h3 class="text-sm text-gray-500 mb-4">Tindakan yang dilakukan</h3>
-                    <div id="actions-list">
+            <!-- Actions and Salinity -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-semibold">Tindakan yang Dilakukan</h3>
+                            <p class="text-sm text-gray-500">Efektivitas tindakan konservasi mangrove</p>
+                        </div>
+                        <button type="button" class="text-gray-500 hover:text-gray-700" title="Filter Options">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                    </div>
+                    <div id="actions-list" class="space-y-4">
                         <!-- Will be populated from JSON -->
                     </div>
+                    <div class="mt-4 text-center">
+                        <button class="primary-button">
+                            <i class="fas fa-plus mr-1"></i> Tambah Tindakan
+                        </button>
+                    </div>
                 </div>
-                <div class="card p-4">
-                    <h3 class="text-sm text-gray-500 mb-4">Salinitas</h3>
+                <div class="card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-semibold">Monitoring Salinitas</h3>
+                            <p class="text-sm text-gray-500">Tingkat salinitas rata-rata bulanan (ppt)</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-500">
+                                <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span> Normal: 30-50
+                                ppt
+                            </span>
+                        </div>
+                    </div>
                     <div class="chart-container">
                         <canvas id="salinityChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Detail
+                            Monitoring</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Global chart variables
         let plantChart = null;
         let salinityChart = null;
 
-        // Mock JSON data in case fetch fails
-        const mockData = {
-            plantGrowth: {
-                dates: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                values: [123, 145, 132, 167, 187, 210]
-            },
-            salinity: {
-                dates: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                values: [65, 59, 80, 75, 62, 70]
-            },
-            diseaseImages: [
-                { 
-                    avatar: '/api/placeholder/32/32', 
-                    title: 'Pemantauan 1', 
-                    action: 'Lihat Detail' 
+        // Today's date in DD/MM/YYYY format
+        const today = new Date();
+        const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
+        // Show loading indicator
+        function showLoading() {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+        }
+
+        // Hide loading indicator
+        function hideLoading() {
+            document.getElementById('loading-indicator').classList.add('hidden');
+        }
+
+        // Format percentage with sign
+        function formatPercentage(percentage) {
+            if (!percentage) return '0%';
+            const isPositive = percentage.includes('+');
+            if (isPositive) {
+                return `<span class="text-green-600">${percentage}</span>`;
+            } else {
+                return `<span class="text-red-600">${percentage}</span>`;
+            }
+        }
+
+        // Function to populate info cards
+        function populateInfoCards(data) {
+            const infoCardsContainer = document.getElementById('info-cards');
+            infoCardsContainer.innerHTML = ''; // Clear existing content
+
+            const cardData = [
+                {
+                    title: 'Jenis Mangrove',
+                    value: data.mangroveInfo.jenis,
+                    icon: 'fas fa-leaf',
+                    color: 'green'
                 },
-                { 
-                    avatar: '/api/placeholder/32/32', 
-                    title: 'Pemantauan 2', 
-                    action: 'Lihat Detail' 
+                {
+                    title: 'Lokasi',
+                    value: data.mangroveInfo.daerah,
+                    icon: 'fas fa-map-marker-alt',
+                    color: 'blue'
                 },
-                { 
-                    avatar: '/api/placeholder/32/32', 
-                    title: 'Pemantauan 3', 
-                    action: 'Lihat Detail' 
+                {
+                    title: 'Status Kondisi',
+                    value: data.mangroveInfo.kondisi,
+                    icon: 'fas fa-heartbeat',
+                    color: 'green'
                 }
-            ],
-            actions: [
-                { id: '01', name: 'Penanaman Bibit', value: '85%', percentage: '+12%', progressPercentage: 85 },
-                { id: '02', name: 'Pemeliharaan', value: '74%', percentage: '+7%', progressPercentage: 74 },
-                { id: '03', name: 'Monitoring', value: '90%', percentage: '+15%', progressPercentage: 90 }
-            ]
-        };
+            ];
+
+            cardData.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card info-card p-5';
+
+                let badgeClass = 'badge-green';
+                if (card.color === 'blue') badgeClass = 'badge-blue';
+                if (card.color === 'red') badgeClass = 'badge-red';
+
+                cardElement.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-gray-500">${card.title}</div>
+                        <div class="w-10 h-10 rounded-full bg-${card.color}-100 flex items-center justify-center text-${card.color}-600">
+                            <i class="${card.icon}"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-xl font-bold mb-3">${card.value}</h2>
+                    <div class="flex items-center justify-between">
+                        <span class="badge ${badgeClass}">
+                            <i class="fas fa-check-circle mr-1"></i> Terverifikasi
+                        </span>
+                        <button class="text-sm text-blue-600 hover:text-blue-800">Detail</button>
+                    </div>
+                `;
+
+                infoCardsContainer.appendChild(cardElement);
+            });
+
+            // Update dashboard stats
+            document.getElementById('stat-total-plants').textContent = data.plantGrowth.values[data.plantGrowth.values.length - 1].toLocaleString();
+            document.getElementById('stat-growth-rate').textContent = '+28%';
+            document.getElementById('stat-health-index').textContent = '93%';
+            document.getElementById('last-updated').textContent = formattedDate;
+        }
 
         // Function to create or update charts
         function setupCharts(data) {
-            // Plant Chart
+            // Plant Growth Chart
             const plantCtx = document.getElementById('plantChart').getContext('2d');
-            
+
+            // Calculate projection data (example: 10% increase for next two months)
+            const lastValue = data.plantGrowth.values[data.plantGrowth.values.length - 1];
+            const projectedValues = [Math.round(lastValue * 1.1), Math.round(lastValue * 1.2)];
+            const allLabels = [...data.plantGrowth.dates, 'Dec', 'Jan'];
+
             // Check for existing chart using Chart.js's registry
             if (plantChart) {
                 plantChart.destroy();
             }
-            
+
+            // Define gradient for plant chart
+            const plantGradient = plantCtx.createLinearGradient(0, 0, 0, 400);
+            plantGradient.addColorStop(0, 'rgba(5, 150, 105, 0.4)');
+            plantGradient.addColorStop(1, 'rgba(5, 150, 105, 0)');
+
             plantChart = new Chart(plantCtx, {
                 type: 'line',
                 data: {
-                    labels: data.plantGrowth.dates,
-                    datasets: [{
-                        data: data.plantGrowth.values,
-                        borderColor: '#000',
-                        borderWidth: 2,
-                        tension: 0.1,
-                        pointRadius: 0,
-                    }]
+                    labels: allLabels,
+                    datasets: [
+                        {
+                            label: 'Jumlah Tanaman',
+                            data: [...data.plantGrowth.values],
+                            borderColor: '#059669',
+                            backgroundColor: plantGradient,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#059669',
+                            fill: true
+                        },
+                        {
+                            label: 'Proyeksi',
+                            data: [...Array(data.plantGrowth.values.length - 2).fill(null), null, null, ...projectedValues],
+                            borderColor: 'rgba(5, 150, 105, 0.5)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: 'rgba(5, 150, 105, 0.5)',
+                            fill: false
+                        }
+                    ]
                 },
                 options: {
                     maintainAspectRatio: false,
                     responsive: true,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
+                            grid: {
+                                drawBorder: false,
+                                color: 'rgba(0,0,0,0.05)'
+                            },
                             ticks: {
-                                callback: function(value) {
-                                    return value;
+                                callback: function (value) {
+                                    return value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value;
                                 }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#1f2937',
+                            borderColor: 'rgba(0, 0, 0, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    return `Jumlah: ${context.formattedValue} tanaman`;
+                                }
+                            }
                         }
                     }
                 }
@@ -265,70 +734,143 @@
 
             // Salinity Chart
             const salinityCtx = document.getElementById('salinityChart').getContext('2d');
-            
+
             // Clean up existing chart
             if (salinityChart) {
                 salinityChart.destroy();
             }
-            
+
+            // Create gradients for salinity bars
+            const normalGradient = salinityCtx.createLinearGradient(0, 0, 0, 400);
+            normalGradient.addColorStop(0, '#059669');
+            normalGradient.addColorStop(1, '#10b981');
+
+            const highGradient = salinityCtx.createLinearGradient(0, 0, 0, 400);
+            highGradient.addColorStop(0, '#f59e0b');
+            highGradient.addColorStop(1, '#fbbf24');
+
+            const lowGradient = salinityCtx.createLinearGradient(0, 0, 0, 400);
+            lowGradient.addColorStop(0, '#3b82f6');
+            lowGradient.addColorStop(1, '#60a5fa');
+
+            // Determine color based on salinity value
+            const backgroundColors = data.salinity.values.map(value => {
+                if (value > 50) return highGradient;
+                if (value < 30) return lowGradient;
+                return normalGradient;
+            });
+
             salinityChart = new Chart(salinityCtx, {
                 type: 'bar',
                 data: {
                     labels: data.salinity.dates,
                     datasets: [{
+                        label: 'Salinitas (ppt)',
                         data: data.salinity.values,
-                        backgroundColor: '#000',
-                        barThickness: 12,
+                        backgroundColor: backgroundColors,
+                        borderRadius: 4,
+                        barThickness: 20,
+                        maxBarThickness: 25
                     }]
                 },
                 options: {
                     maintainAspectRatio: false,
                     responsive: true,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 100
+                            max: 60,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return value + ' ppt';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#1f2937',
+                            borderColor: 'rgba(0, 0, 0, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    const value = context.parsed.y;
+                                    let status = 'Normal';
+                                    if (value > 50) status = 'Tinggi';
+                                    if (value < 30) status = 'Rendah';
+                                    return [`Salinitas: ${value} ppt`, `Status: ${status}`];
+                                }
+                            }
                         }
                     }
                 }
             });
         }
+        // Function to populate monitoring images
+        function populateMonitoringImages(data) {
+            const monitoringImagesContainer = document.getElementById('monitoring-images');
+            monitoringImagesContainer.innerHTML = ''; // Clear existing content
 
-        // Function to populate disease images
-        function populateDiseaseImages(data) {
-            const diseaseImagesContainer = document.getElementById('disease-images');
-            diseaseImagesContainer.innerHTML = ''; // Clear existing content
-            
-            data.diseaseImages.forEach(image => {
+            // Only display the first 3 images, even if we have more
+            const imagesToShow = data.diseaseImages.slice(0, 3);
+
+            imagesToShow.forEach(image => {
                 const imageItem = document.createElement('div');
                 imageItem.className = 'image-item';
-                
+
                 const avatar = document.createElement('img');
                 avatar.src = image.avatar;
-                avatar.alt = 'Avatar';
+                avatar.alt = 'Monitoring Image';
                 avatar.className = 'avatar';
-                
+
                 const textContainer = document.createElement('div');
+                textContainer.className = 'flex-1';
+
+                const titleRow = document.createElement('div');
+                titleRow.className = 'flex justify-between items-center';
+
                 const title = document.createElement('div');
-                title.className = 'text-sm font-medium';
+                title.className = 'font-medium';
                 title.textContent = image.title;
-                
-                const action = document.createElement('div');
-                action.className = 'text-xs text-blue-600';
-                action.textContent = image.action;
-                
-                textContainer.appendChild(title);
-                textContainer.appendChild(action);
-                
+
+                const date = document.createElement('div');
+                date.className = 'text-xs text-gray-500';
+                date.textContent = formattedDate;
+
+                titleRow.appendChild(title);
+                titleRow.appendChild(date);
+
+                const actionLink = document.createElement('a');
+                actionLink.href = '#';
+                actionLink.className = 'text-sm text-blue-600 hover:underline';
+                actionLink.textContent = image.action;
+
+                textContainer.appendChild(titleRow);
+                textContainer.appendChild(actionLink);
+
                 imageItem.appendChild(avatar);
                 imageItem.appendChild(textContainer);
-                
-                diseaseImagesContainer.appendChild(imageItem);
+
+                monitoringImagesContainer.appendChild(imageItem);
             });
         }
 
@@ -336,129 +878,238 @@
         function populateActionsList(data) {
             const actionsContainer = document.getElementById('actions-list');
             actionsContainer.innerHTML = ''; // Clear existing content
-            
-            // Add header
-            const header = document.createElement('div');
-            header.className = 'flex items-center justify-between mb-2 text-sm text-gray-500';
-            
-            const jenisHeader = document.createElement('div');
-            jenisHeader.textContent = 'Jenis Tindakan';
-            
-            const metricHeaders = document.createElement('div');
-            metricHeaders.className = 'flex items-center gap-8';
-            
-            const efektivitasHeader = document.createElement('div');
-            efektivitasHeader.textContent = 'Efektivitas';
-            
-            const dampakHeader = document.createElement('div');
-            dampakHeader.textContent = 'Dampak';
-            
-            metricHeaders.appendChild(efektivitasHeader);
-            metricHeaders.appendChild(dampakHeader);
-            
-            header.appendChild(jenisHeader);
-            header.appendChild(metricHeaders);
-            
-            actionsContainer.appendChild(header);
-            
-            // Add actions
-            data.actions.forEach(action => {
+
+            // Only display the first 3 actions, even if we have more
+            const actionsToShow = data.actions.slice(0, 3);
+
+            actionsToShow.forEach(action => {
                 const actionRow = document.createElement('div');
-                actionRow.className = 'mb-4';
-                
-                const actionHeader = document.createElement('div');
-                actionHeader.className = 'flex items-center justify-between mb-1';
-                
-                const actionNumber = document.createElement('div');
-                actionNumber.className = 'flex items-center gap-2';
-                
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'font-medium';
-                numberSpan.textContent = action.id;
-                
-                const actionDesc = document.createElement('span');
-                actionDesc.textContent = action.name;
-                
-                actionNumber.appendChild(numberSpan);
-                actionNumber.appendChild(actionDesc);
-                
-                const actionValues = document.createElement('div');
-                actionValues.className = 'flex items-center gap-4';
-                
+                actionRow.className = 'flex items-center space-x-4 mb-4';
+
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600';
+                iconContainer.innerHTML = '<i class="fas fa-leaf"></i>';
+
+                const contentContainer = document.createElement('div');
+                contentContainer.className = 'flex-1';
+
+                const titleRow = document.createElement('div');
+                titleRow.className = 'flex justify-between items-center mb-1';
+
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'font-medium';
+                nameContainer.textContent = action.name;
+
                 const valueContainer = document.createElement('div');
-                valueContainer.className = 'w-20 text-right font-medium';
+                valueContainer.className = 'text-sm font-bold';
                 valueContainer.textContent = action.value;
-                
-                const percentContainer = document.createElement('div');
-                percentContainer.className = 'w-12 text-right';
-                percentContainer.textContent = action.percentage;
-                
-                actionValues.appendChild(valueContainer);
-                actionValues.appendChild(percentContainer);
-                
-                actionHeader.appendChild(actionNumber);
-                actionHeader.appendChild(actionValues);
-                
+
+                titleRow.appendChild(nameContainer);
+                titleRow.appendChild(valueContainer);
+
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'flex items-center justify-between';
+
                 const progressBar = document.createElement('div');
-                progressBar.className = 'progress-bar';
-                
+                progressBar.className = 'progress-bar flex-1 mr-4';
+
                 const progressValue = document.createElement('div');
                 progressValue.className = 'progress-value';
+
+                // Set color based on percentage value
+                if (action.percentage.includes('-')) {
+                    progressValue.className += ' progress-negative';
+                } else {
+                    progressValue.className += ' progress-positive';
+                }
+
                 progressValue.style.width = action.progressPercentage + '%';
-                
                 progressBar.appendChild(progressValue);
-                
-                const navigationRow = document.createElement('div');
-                navigationRow.className = 'flex items-center justify-between mt-1';
-                
-                const prevButton = document.createElement('button');
-                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-                prevButton.className = 'text-gray-500';
-                
-                const nextButton = document.createElement('button');
-                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                nextButton.className = 'text-gray-500';
-                
-                navigationRow.appendChild(prevButton);
-                navigationRow.appendChild(nextButton);
-                
-                actionRow.appendChild(actionHeader);
-                actionRow.appendChild(progressBar);
-                actionRow.appendChild(navigationRow);
-                
+
+                const percentageContainer = document.createElement('div');
+                percentageContainer.className = 'text-sm';
+
+                if (action.percentage.includes('-')) {
+                    percentageContainer.className += ' text-red-600';
+                } else {
+                    percentageContainer.className += ' text-green-600';
+                }
+
+                percentageContainer.textContent = action.percentage;
+
+                progressContainer.appendChild(progressBar);
+                progressContainer.appendChild(percentageContainer);
+
+                contentContainer.appendChild(titleRow);
+                contentContainer.appendChild(progressContainer);
+
+                actionRow.appendChild(iconContainer);
+                actionRow.appendChild(contentContainer);
+
                 actionsContainer.appendChild(actionRow);
             });
         }
 
-        // Function to handle window resize for charts
+        // Fetch and load data
+        function loadData() {
+            showLoading();
+
+            // URL untuk data JSON - ganti dengan path yang benar
+            const dataUrl = 'https://4211421036.github.io/mapps/mangrove_data.json';
+
+            // Data JSON statis sebagai fallback
+            const mockData = {
+                plantGrowth: {
+                    dates: ["23 Nov", "24", "25", "26", "27", "28", "29", "30"],
+                    values: [300, 600, 1000, 1500, 1800, 2500, 3200, 3000, 3500, 4000]
+                },
+                salinity: {
+                    dates: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+                    values: [38, 42, 36, 32, 37, 45, 52, 48, 55, 40, 35, 7]
+                },
+                diseaseImages: [
+                    {
+                        avatar: "/api/placeholder/40/40",
+                        title: "Penyebab Penyakit",
+                        action: "Tindakan"
+                    },
+                    {
+                        avatar: "/api/placeholder/40/40",
+                        title: "Penyebab Penyakit",
+                        action: "Tindakan"
+                    },
+                    {
+                        avatar: "/api/placeholder/40/40",
+                        title: "Penyebab Penyakit",
+                        action: "Tindakan"
+                    },
+                    {
+                        avatar: "/api/placeholder/40/40",
+                        title: "Penyebab Penyakit",
+                        action: "Tindakan"
+                    },
+                    {
+                        avatar: "/api/placeholder/40/40",
+                        title: "Penyebab Penyakit",
+                        action: "Tindakan"
+                    }
+                ],
+                actions: [
+                    {
+                        id: "1",
+                        name: "Jenis Tindakan",
+                        value: "4321",
+                        percentage: "+84%",
+                        progressPercentage: 85
+                    },
+                    {
+                        id: "2",
+                        name: "Jenis Tindakan",
+                        value: "4033",
+                        percentage: "-8%",
+                        progressPercentage: 75
+                    },
+                    {
+                        id: "3",
+                        name: "Jenis Tindakan",
+                        value: "3128",
+                        percentage: "+2%",
+                        progressPercentage: 65
+                    },
+                    {
+                        id: "4",
+                        name: "Jenis Tindakan",
+                        value: "2104",
+                        percentage: "+33%",
+                        progressPercentage: 55
+                    },
+                    {
+                        id: "5",
+                        name: "Jenis Tindakan",
+                        value: "2003",
+                        percentage: "+20%",
+                        progressPercentage: 50
+                    },
+                    {
+                        id: "6",
+                        name: "Jenis Tindakan",
+                        value: "1894",
+                        percentage: "+15%",
+                        progressPercentage: 45
+                    },
+                    {
+                        id: "7",
+                        name: "Jenis Tindakan",
+                        value: "405",
+                        percentage: "-12%",
+                        progressPercentage: 35
+                    }
+                ],
+                mangroveInfo: {
+                    jenis: "Sonneratia",
+                    daerah: "Pantai Mangunharjo",
+                    kondisi: "Mangrove Sehat"
+                }
+            };
+
+            // Simulasi loading data
+            setTimeout(() => {
+                // Dalam kasus nyata, gunakan fetch untuk mengambil data
+                // fetch(dataUrl)
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         initializeApp(data);
+                //         hideLoading();
+                //     })
+                //     .catch(error => {
+                //         console.warn('Error loading data, using mock data instead:', error);
+                //         initializeApp(mockData);
+                //         hideLoading();
+                //     });
+
+                // Untuk contoh ini, langsung gunakan mock data
+                initializeApp(mockData);
+                hideLoading();
+            }, 800); // Simulasi delay 800ms untuk menunjukkan loading indicator
+        }
+
+        // Initialize the application with data
+        function initializeApp(data) {
+            // Initialize all components with the fetched data
+            populateInfoCards(data);
+            setupCharts(data);
+            populateMonitoringImages(data);
+            populateActionsList(data);
+
+            // Add event listeners
+            document.getElementById('growth-period').addEventListener('change', function () {
+                // In a real app, would reload data or filter based on selection
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                }, 500);
+            });
+        }
+
+        // Handle window resize for charts
         function handleResize() {
             // Charts will automatically resize with responsive option
+            if (plantChart) {
+                plantChart.resize();
+            }
+            if (salinityChart) {
+                salinityChart.resize();
+            }
         }
-        
+
         // Add resize event listener
         window.addEventListener('resize', handleResize);
-        
-        // Load and initialize data
-        function loadData() {
-            fetch('mangrove_data.json')
-                .then(response => response.json())
-                .then(data => {
-                    // Initialize all components with the fetched data
-                    setupCharts(data);
-                    populateDiseaseImages(data);
-                    populateActionsList(data);
-                })
-                .catch(error => {
-                    console.warn('Error loading data, using mock data instead:', error);
-                    // Use mock data if fetch fails
-                    setupCharts(mockData);
-                    populateDiseaseImages(mockData);
-                    populateActionsList(mockData);
-                });
-        }
-        
-        // Initialize the application
-        loadData();
+
+        // Initialize the application on load
+        window.addEventListener('DOMContentLoaded', function () {
+            loadData();
+        });
     </script>
 </body>
+
 </html>
